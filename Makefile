@@ -28,10 +28,7 @@ $(NAME):	$(OBJS)
 		$(MAKE) run -C ./libft/; \
 	fi
 	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME)
-	echo "\\n$(GREEN)$(REPEATED_CHARS)$(RESET)" 
-	echo "$(WHITE)	$(NAME)"
-	echo "$(GREEN)$(REPEATED_CHARS)$(RESET)" 
-	echo "$(GREEN)SUCCESSFULLY COMPILED$(RESET)\\n"
+	echo "$(GREEN)[OK] $(WHITE)$(NAME)$(RESET)" 
 
 # Build minishell executable
 all:	$(NAME)
@@ -50,6 +47,7 @@ re: fclean all
 # Rebuild the project and remove object files
 run: re
 	$(MAKE) clean
+	clear
 	./$(NAME)
 
 # Show help message

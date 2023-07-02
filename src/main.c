@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 00:49:42 by pedro             #+#    #+#             */
-/*   Updated: 2023/07/01 09:17:51 by pedro            ###   ########.fr       */
+/*   Updated: 2023/07/01 19:47:52 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	init_minishell(char **envp)
 	fd = open("history", O_CREAT | O_WRONLY | O_APPEND, 0644);
 	while (1)
 	{
-		ft_printf(WHITE"my shell> "RESET);
+		ft_printf(WHITE"minishell> "RESET);
 		buf = get_next_line(STDIN_FILENO);
 		if (buf)
 		{
-			if (is_limiter("\n", buf))
+			if (is_limiter("exit\n", buf))
 				break ;
 			write(fd, buf, ft_strlen(buf));
 			list = define_path(list, ft_strip(buf), envp);

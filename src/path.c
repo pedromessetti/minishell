@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:16:46 by pmessett          #+#    #+#             */
-/*   Updated: 2023/06/30 17:17:39 by pedro            ###   ########.fr       */
+/*   Updated: 2023/07/01 11:00:54 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_cmd	*find_path(t_cmd *path_list, char **possible_paths, char *av,
 			free(tmp);
 	}
 	if (!tmp || (!possible_paths[i] && !check_builtin(av)))
-		ft_printf("minishell: %s: command not found\n", path_and_cmd[0]);
+		ft_printf(RED"minishell: %s: command not found\n"RESET, path_and_cmd[0]);
 	free(path_and_cmd[0]);
 	path_and_cmd[0] = tmp;
 	path_list = set_cmd_list(path_list, path_and_cmd[0], path_and_cmd);
