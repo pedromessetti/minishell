@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 12:43:36 by pmessett          #+#    #+#             */
-/*   Updated: 2023/06/30 08:29:24 by pedro            ###   ########.fr       */
+/*   Updated: 2023/06/30 08:29:24 by pmessett            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,31 @@ void	check_exit_status(t_cmd *path_list)
 	else
 		ft_printf("exit: %s: numeric argument required\n",
 			path_list->path_and_cmd[1]);
+}
+
+void	check_env(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "PATH=", ft_strlen("PATH=")) == 0)
+			return ;
+		i++;
+	}
+	ft_printf("minishell: PATH not set\n");
+	exit(EXIT_FAILURE);
+}
+
+int	ask_for_exit_status(char **path_and_cmd)
+{
+	if (ft_strcmp(path_and_cmd[0], "/usr/bin/echo") == 0
+		&& (ft_strcmp(path_and_cmd[1], "$?") == 0))
+	{
+		ft_putnbr_fd(g_last_exit_status, STDOUT_FILENO);
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		return (1);
+	}
+	return (0);
 }

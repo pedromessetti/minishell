@@ -11,7 +11,7 @@ NAME = minishell
 
 # Compiler options
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I inc -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -I inc #-fsanitize=address
 
 # Source and object files
 SRCS =	$(wildcard ./src/*.c)
@@ -27,7 +27,7 @@ $(NAME):	$(OBJS)
 	if [ ! -f ./libft/libft.a ]; then \
 		$(MAKE) run -C ./libft/; \
 	fi
-	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a -o $(NAME) -lreadline
 	echo "$(GREEN)[OK] $(WHITE)$(NAME)$(RESET)" 
 
 # Build minishell executable
@@ -42,7 +42,7 @@ fclean: clean
 	rm -f $(NAME) history
 
 # Rebuild the project
-re: fclean all
+re: fclean $(NAME)
 
 # Rebuild the project and remove object files
 run: re

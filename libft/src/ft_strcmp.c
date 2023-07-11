@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_list.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/19 23:01:40 by pmessett             #+#    #+#             */
-/*   Updated: 2023/06/19 23:17:00 by pmessett            ###   ########.fr       */
+/*   Created: 2023/07/10 23:27:48 by pmessett             #+#    #+#             */
+/*   Updated: 2023/07/10 23:28:19 by pmessett            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void    free_list(t_list **list)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    t_list *tmp;
+	size_t i;
 
-    tmp = NULL;
-    if (!*list)
-        return ;
-    *list = ft_find_head((*list));
-    while (*list)
-    {
-        tmp = (*list)->next;
-        free((*list)->content);
-        free(*list);
-        *list = tmp;
-    }
+	i = 0;
+	while (s1[i] == s2[i] && s1[i])
+		i++;
+	return (((unsigned char)s1[i]) - ((unsigned char)s2[i]));
 }

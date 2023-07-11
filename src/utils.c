@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/30 08:08:46 by pedro             #+#    #+#             */
-/*   Updated: 2023/06/30 08:12:49 by pedro            ###   ########.fr       */
+/*   Created: 2023/06/30 08:08:46 by pmessett             #+#    #+#             */
+/*   Updated: 2023/07/07 08:18:28 by pmessett            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	haspipe(char *s)
+{
+	if (ft_strnstr(s, "|", ft_strlen(s)))
+		return (1);
+	return (0);
+}
 
 char	*ft_strip(char *str)
 {
@@ -37,6 +44,8 @@ char	*ft_strip(char *str)
 	size_t i, j;
 	for (i = 0, j = 0; result[i]; i++)
 	{
+		if (result[i] == '\n')
+			i++;
 		if (ft_isspace(result[i]))
 		{
 			if (j == 0 || !ft_isspace(result[j - 1]))
@@ -47,4 +56,17 @@ char	*ft_strip(char *str)
 	}
 	result[j] = '\0';
 	return (result);
+}
+
+void	print_list(t_cmd *list)
+{
+	t_cmd *curr;
+
+	curr = list;
+	while (curr)
+	{
+		for (int i = 0; curr->path_and_cmd[i]; i++)
+			printf("path_and_cmd[%i] = %s\n", i, curr->path_and_cmd[i]);
+		curr = curr->next;
+	}
 }

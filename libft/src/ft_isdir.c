@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/29 22:16:54 by pedro             #+#    #+#             */
-/*   Updated: 2023/06/29 22:17:14 by pedro            ###   ########.fr       */
+/*   Created: 2023/06/29 22:16:54 by pmessett             #+#    #+#             */
+/*   Updated: 2023/07/03 09:24:08 by pmessett            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	is_dir(char *s)
+int	ft_isdir(char *s)
 {
     if ((ft_strncmp(s, "/", 1)) == 0 || (ft_strncmp(s, "./", 2)) == 0)
         return (1);

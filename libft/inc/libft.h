@@ -3,10 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+
+	+#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 20:33:25 by pmessett          #+#    #+#             */
-/*   Updated: 2023/06/29 22:18:43 by pedro            ###   ########.fr       */
+/*   Updated: 2023/07/10 23:54:35 by pmessett            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +49,14 @@ typedef struct s_list
 
 int					ft_str_empty(char *s);
 int					ft_str_is_num(char *s);
+int					ft_str_isspace(char *s);
 int					ft_isalpha(int c);
 int					ft_isnum(int c);
 int					ft_isalnum(int c);
 int					ft_isascii(int c);
 int					ft_isprint(int c);
 int					ft_isspace(char c);
-int 				ft_isdir(char *s);
+int					ft_isdir(char *s);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
 
@@ -68,6 +70,7 @@ size_t				ft_strlcpy(char *dst, const char *src, size_t size);
 size_t				ft_strlcat(char *dst, const char *src, size_t size);
 char				*ft_strchr(const char *s, int c);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
+int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *big, const char *little,

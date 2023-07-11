@@ -3,10 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+
+	+#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/17 09:15:32 by pedro             #+#    #+#             */
-/*   Updated: 2023/07/01 09:13:39 by pedro            ###   ########.fr       */
+/*   Created: 2023/06/17 09:15:32 by pmessett             #+#    #+#             */
+/*   Updated: 2023/07/11 08:55:14 by pmessett            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +17,8 @@
 # include "../libft/inc/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -48,6 +51,10 @@ typedef struct s_cmd
 	struct s_cmd	*prev;
 }					t_cmd;
 
+/* --- Global Variable --- */
+
+extern int			g_last_exit_status;
+
 /* --- Path Functions --- */
 
 char				**set_possible_paths(char **envp);
@@ -69,11 +76,10 @@ t_cmd				*set_cmd_list(t_cmd *path_list, char *path,
 /* --- Child Process Functions --- */
 
 void				child_process(t_cmd *path_list, char **envp);
-void				bind_stds(t_cmd *curr, int fd[]);
-void				close_fds(int fd[], t_cmd *curr, int opt);
+void				bind_stds(t_cmd *curr);
 int					ft_wait(t_cmd *curr);
-int					start_process(t_cmd *path_list, int fd[], char **envp,
-						char **av);
+int					start_process(t_cmd *path_list, char **envp);
+void				pipes_process(t_cmd *path_list, char **envp);
 
 /* --- Checker Functions --- */
 
@@ -81,7 +87,7 @@ void				check_ac(int ac);
 int					*check_fd(int fd[], char **av, int ac);
 int					check_builtin(char *av);
 void				check_exit_status(t_cmd *path_list);
-int					is_dir(char *s);
+int					ask_for_exit_status(char **path_and_cmd);
 
 /* --- Heredoc Functions --- */
 
@@ -89,8 +95,19 @@ int					is_here_doc(char *s);
 int					is_limiter(char *limiter, char *buf);
 void				handle_here_doc(char *av, int fd[]);
 
+/* --- Pipes Functions --- */
+
+t_cmd				*define_multiple_path(t_cmd *path_list, char **av,
+						char **envp);
+t_cmd				*choose_multiple_handle(char *av, char **envp,
+						t_cmd *path_list);
+t_cmd				*find_multiple_path(t_cmd *path_list, char **possible_paths,
+						char *av, char **path_and_cmd);
+
 /* --- Utils Functions --- */
 
 char				*ft_strip(char *str);
+void				print_list(t_cmd *list);
+int					haspipe(char *s);
 
 #endif // !MINISHELL.H

@@ -1,30 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_list.c                                        :+:      :+:    :+:   */
+/*   ft_str_isspace.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/19 23:01:40 by pmessett             #+#    #+#             */
-/*   Updated: 2023/06/19 23:17:00 by pmessett            ###   ########.fr       */
+/*   Created: 2023/07/11 09:11:42 by pedro             #+#    #+#             */
+/*   Updated: 2023/07/11 09:11:46 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void    free_list(t_list **list)
+int ft_str_isspace(char *s)
 {
-    t_list *tmp;
-
-    tmp = NULL;
-    if (!*list)
-        return ;
-    *list = ft_find_head((*list));
-    while (*list)
+    while (*s)
     {
-        tmp = (*list)->next;
-        free((*list)->content);
-        free(*list);
-        *list = tmp;
+        if (!ft_isspace(*s))
+            return (0);
+        s++;
     }
+    return (1);
 }
