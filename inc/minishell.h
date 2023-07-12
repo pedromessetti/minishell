@@ -76,10 +76,11 @@ t_cmd				*set_cmd_list(t_cmd *path_list, char *path,
 /* --- Child Process Functions --- */
 
 void				child_process(t_cmd *path_list, char **envp);
-void				bind_stds(t_cmd *curr);
+void				bind_stdin(t_cmd *curr);
+void				bind_stdout(t_cmd *curr);
 int					ft_wait(t_cmd *curr);
 int					start_process(t_cmd *path_list, char **envp);
-void				pipes_process(t_cmd *path_list, char **envp);
+void				exec_cmd(t_cmd *path_list, char **envp);
 
 /* --- Checker Functions --- */
 
@@ -103,11 +104,16 @@ t_cmd				*choose_multiple_handle(char *av, char **envp,
 						t_cmd *path_list);
 t_cmd				*find_multiple_path(t_cmd *path_list, char **possible_paths,
 						char *av, char **path_and_cmd);
+void				close_all_pipes(t_cmd *list);
 
 /* --- Utils Functions --- */
 
 char				*ft_strip(char *str);
 void				print_list(t_cmd *list);
 int					haspipe(char *s);
+
+
+
+char	*handle_variable(char *var, char **envp);
 
 #endif // !MINISHELL.H

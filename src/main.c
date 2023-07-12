@@ -6,11 +6,29 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/07/11 10:24:29 by pedro            ###   ########.fr       */
+/*   Updated: 2023/07/12 08:12:03 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*handle_variable(char *var, char **envp)
+{
+	int	i;
+
+	i = -1;
+	var = ft_strip(++var);
+	while (envp[++i])
+	{
+		if (ft_strncmp(envp[i], var, ft_strlen(var)) == 0)
+		{
+			var = ft_strchr(envp[i], '=');
+			break ;
+		}
+		var = NULL;
+	}
+	return (++var);
+}
 
 void	handle_arg(char *buf, char **envp)
 {
@@ -25,6 +43,8 @@ void	handle_arg(char *buf, char **envp)
 		args = ft_split(buf, '|');
 		list = define_multiple_path(list, args, envp);
 		start_process(list, envp);
+		free_matrix(args);
+		free_path_list(&list);
 	}
 	else
 	{
@@ -56,8 +76,6 @@ int	main(int ac, char **av, char **envp)
 			free(input);
 			exit(EXIT_SUCCESS);
 		}
-		else if (ft_strncmp(input, "$?", 2) == 0)
-			printf("%i\n", g_last_exit_status);
 		else
 		{
 			handle_arg(input, envp);

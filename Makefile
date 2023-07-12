@@ -11,7 +11,7 @@ NAME = minishell
 
 # Compiler options
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -I inc #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -I inc -fsanitize=address
 
 # Source and object files
 SRCS =	$(wildcard ./src/*.c)

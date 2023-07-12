@@ -3,7 +3,8 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+
+	+#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:16:46 by pmessett          #+#    #+#             */
 /*   Updated: 2023/07/03 21:35:11 by pmessett            ###   ########.fr       */
@@ -55,7 +56,8 @@ t_cmd	*find_path(t_cmd *path_list, char **possible_paths, char *av,
 			free(tmp);
 	}
 	if (!tmp || (!possible_paths[i] && !check_builtin(av)))
-		ft_printf(RED"minishell: %s: command not found\n"RESET, path_and_cmd[0]);
+		ft_printf(RED "minishell: %s: command not found\n" RESET,
+			path_and_cmd[0]);
 	free(path_and_cmd[0]);
 	path_and_cmd[0] = tmp;
 	path_list = set_cmd_list(path_list, path_and_cmd[0], path_and_cmd);
@@ -64,7 +66,7 @@ t_cmd	*find_path(t_cmd *path_list, char **possible_paths, char *av,
 
 t_cmd	*handle_str_error(char *buf, t_cmd *path_list)
 {
-	ft_printf(RED"minishell: %s: command not found\n"RESET, buf);
+	ft_printf(RED "minishell: %s: command not found\n" RESET, buf);
 	path_list = set_cmd_list(path_list, NULL, NULL);
 	return (path_list);
 }
@@ -78,7 +80,8 @@ t_cmd	*choose_handle(char *buf, char **envp, t_cmd *list)
 	if (ft_isdir(buf))
 	{
 		if (access(path_and_cmd[0], F_OK) == -1)
-			ft_printf(RED"minishell: %s: No such file or directory\n"RESET, path_and_cmd[0]);
+			ft_printf(RED "minishell: %s: No such file or directory\n" RESET,
+				path_and_cmd[0]);
 		list = set_cmd_list(list, path_and_cmd[0], path_and_cmd);
 	}
 	else
@@ -93,8 +96,16 @@ t_cmd	*choose_handle(char *buf, char **envp, t_cmd *list)
 /*Main function to define if the argv is an absolute path or not*/
 t_cmd	*define_path(t_cmd *list, char *buf, char **envp)
 {
+	char	*var;
+
+	var = NULL;
 	if (ft_str_empty(buf))
 		list = handle_str_error(buf, list);
+	if ((var = ft_strnstr(buf, "$", ft_strlen(buf))))
+	{
+		var = handle_variable(var, envp);
+		list = choose_handle(var, envp, list);
+	}
 	else
 		list = choose_handle(buf, envp, list);
 	return (list);
