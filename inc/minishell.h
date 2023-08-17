@@ -43,7 +43,7 @@
 typedef struct s_cmd
 {
 	char			*path;
-	char			**path_and_cmd;
+	char			**p_f;
 	pid_t			pid;
 	int				pipe_fd[2];
 	int				dup2_fd[2];
@@ -59,19 +59,19 @@ extern int			g_last_exit_status;
 
 char				**set_possible_paths(char **envp);
 t_cmd				*find_path(t_cmd *path_list, char **possible_paths,
-						char *av, char **path_and_cmd);
+						char *av, char **p_f);
 t_cmd				*define_path(t_cmd *list, char *buf, char **envp);
 t_cmd				*handle_str_error(char *buf, t_cmd *path_list);
 t_cmd				*choose_handle(char *av, char **envp, t_cmd *path_list);
 
 /* --- List Functions --- */
 
-t_cmd				*add_path(char *path, char **path_and_cmd);
+t_cmd				*add_path(char *path, char **p_f);
 void				add_tail(t_cmd **list_head, t_cmd *new_path);
 t_cmd				*find_last(t_cmd *paths_list);
 void				free_path_list(t_cmd **paths_list);
 t_cmd				*set_cmd_list(t_cmd *path_list, char *path,
-						char **path_and_cmd);
+						char **p_f);
 
 /* --- Child Process Functions --- */
 
@@ -88,7 +88,7 @@ void				check_ac(int ac);
 int					*check_fd(int fd[], char **av, int ac);
 int					check_builtin(char *av);
 void				check_exit_status(t_cmd *path_list);
-int					ask_for_exit_status(char **path_and_cmd);
+int					ask_for_exit_status(char **p_f);
 
 /* --- Heredoc Functions --- */
 
@@ -103,7 +103,7 @@ t_cmd				*define_multiple_path(t_cmd *path_list, char **av,
 t_cmd				*choose_multiple_handle(char *av, char **envp,
 						t_cmd *path_list);
 t_cmd				*find_multiple_path(t_cmd *path_list, char **possible_paths,
-						char *av, char **path_and_cmd);
+						char *av, char **p_f);
 void				close_all_pipes(t_cmd *list);
 
 /* --- Utils Functions --- */

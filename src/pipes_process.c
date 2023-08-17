@@ -18,7 +18,7 @@ int		g_last_exit_status = 0;
 void	exec_cmd(t_cmd *path_list, char **envp)
 {
 	if (path_list->path)
-		execve(path_list->path, path_list->path_and_cmd, envp);
+		execve(path_list->path, path_list->p_f, envp);
 	close(path_list->dup2_fd[0]);
 	close(path_list->dup2_fd[1]);
 	free_path_list(&path_list);
@@ -86,7 +86,7 @@ int	start_process(t_cmd *path_list, char **envp)
 				bind_stdin(curr);
 			if (curr->next)
 				bind_stdout(curr);
-			if (ask_for_exit_status(curr->path_and_cmd))
+			if (ask_for_exit_status(curr->p_f))
 				exit(g_last_exit_status);
 			exec_cmd(curr, envp);
 		}

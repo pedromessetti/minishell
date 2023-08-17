@@ -65,8 +65,8 @@ void	print_list(t_cmd *list)
 	curr = list;
 	while (curr)
 	{
-		for (int i = 0; curr->path_and_cmd[i]; i++)
-			printf("path_and_cmd[%i] = %s\n", i, curr->path_and_cmd[i]);
+		for (int i = 0; curr->p_f[i]; i++)
+			printf("p_f[%i] = %s\n", i, curr->p_f[i]);
 		curr = curr->next;
 	}
 }

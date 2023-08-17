@@ -58,12 +58,12 @@ int	check_builtin(char *av)
 
 void	check_exit_status(t_cmd *path_list)
 {
-	if (ft_str_is_num(path_list->path_and_cmd[1])
-		|| !path_list->path_and_cmd[1])
+	if (ft_str_is_num(path_list->p_f[1])
+		|| !path_list->p_f[1])
 		return ;
 	else
 		ft_printf("exit: %s: numeric argument required\n",
-			path_list->path_and_cmd[1]);
+			path_list->p_f[1]);
 }
 
 void	check_env(char **envp)
@@ -81,10 +81,10 @@ void	check_env(char **envp)
 	exit(EXIT_FAILURE);
 }
 
-int	ask_for_exit_status(char **path_and_cmd)
+int	ask_for_exit_status(char **p_f)
 {
-	if (ft_strcmp(path_and_cmd[0], "/usr/bin/echo") == 0
-		&& (ft_strcmp(path_and_cmd[1], "$?") == 0))
+	if (ft_strcmp(p_f[0], "/usr/bin/echo") == 0
+		&& (ft_strcmp(p_f[1], "$?") == 0))
 	{
 		ft_putnbr_fd(g_last_exit_status, STDOUT_FILENO);
 		ft_putchar_fd('\n', STDOUT_FILENO);

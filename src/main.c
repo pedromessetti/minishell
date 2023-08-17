@@ -6,28 +6,56 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/07/12 08:12:03 by pedro            ###   ########.fr       */
+/*   Updated: 2023/07/15 07:08:26 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	has_variable(char *buf)
+{
+	if (ft_strnstr(buf, "$", ft_strlen(buf)))
+		return (1);
+	return (0);
+}
+
+int	valid_variable(char *buf, char **envp)
+{
+	char	*var;
+
+	if (((var = ft_strnstr(buf, "$", ft_strlen(buf)))))
+	{
+		if (!handle_variable(var, envp))
+			return (0);
+	}
+	return (1);
+}
+
+int	calc_len(char *s)
+{
+	int	i;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (s[i] == '=')
+			break ;
+	}
+	return (i);
+}
 
 char	*handle_variable(char *var, char **envp)
 {
 	int	i;
 
 	i = -1;
-	var = ft_strip(++var);
+	++var;
 	while (envp[++i])
 	{
-		if (ft_strncmp(envp[i], var, ft_strlen(var)) == 0)
-		{
-			var = ft_strchr(envp[i], '=');
-			break ;
-		}
-		var = NULL;
+		if (ft_strncmp(envp[i], var, calc_len(envp[i])) == 0)
+			return (ft_strchr(envp[i], '='));
 	}
-	return (++var);
+	return (NULL);
 }
 
 void	handle_arg(char *buf, char **envp)
@@ -36,7 +64,7 @@ void	handle_arg(char *buf, char **envp)
 	t_cmd	*list;
 
 	list = NULL;
-	if (!buf[0] || ft_str_isspace(buf))
+	if (!buf[0] || ft_str_isspace(buf) || (has_variable(buf) && !valid_variable(buf, envp)))
 		return ;
 	if (haspipe(buf))
 	{
@@ -52,7 +80,7 @@ void	handle_arg(char *buf, char **envp)
 		list->pid = fork();
 		if (list->pid == 0)
 		{
-			if (ask_for_exit_status(list->path_and_cmd))
+			if (ask_for_exit_status(list->p_f))
 				exit(g_last_exit_status);
 			child_process(list, envp);
 		}
@@ -61,12 +89,10 @@ void	handle_arg(char *buf, char **envp)
 	}
 }
 
-int	main(int ac, char **av, char **envp)
+void	init(char **envp)
 {
 	char	*input;
 
-	(void)av;
-	check_ac(ac);
 	while (1)
 	{
 		input = readline(WHITE "minishell> " RESET);
@@ -76,12 +102,15 @@ int	main(int ac, char **av, char **envp)
 			free(input);
 			exit(EXIT_SUCCESS);
 		}
-		else
-		{
-			handle_arg(input, envp);
-			free(input);
-		}
+		handle_arg(input, envp);
+		free(input);
 	}
-	free(input);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	(void)av;
+	check_ac(ac);
+	init(envp);
 	return (0);
 }

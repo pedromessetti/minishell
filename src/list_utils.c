@@ -14,16 +14,16 @@
 
 /*Checks if the path_list is empity, if it is, add a new path to the top,
 else add a new path in the end*/
-t_cmd	*set_cmd_list(t_cmd *path_list, char *path, char **path_and_cmd)
+t_cmd	*set_cmd_list(t_cmd *path_list, char *path, char **p_f)
 {
 	t_cmd	*new_list;
 
 	new_list = NULL;
 	if (!path_list)
-		path_list = add_path(path, path_and_cmd);
+		path_list = add_path(path, p_f);
 	else
 	{
-		new_list = add_path(path, path_and_cmd);
+		new_list = add_path(path, p_f);
 		add_tail(&path_list, new_list);
 	}
 	return (path_list);
@@ -42,8 +42,8 @@ void	free_path_list(t_cmd **path_list)
 	while (*path_list)
 	{
 		tmp = (*path_list)->next;
-		if ((*path_list)->path_and_cmd)
-			free_matrix((*path_list)->path_and_cmd);
+		if ((*path_list)->p_f)
+			free_matrix((*path_list)->p_f);
 		if (!(*path_list)->path)
 			free((*path_list)->path);
 		free(*path_list);
@@ -52,7 +52,7 @@ void	free_path_list(t_cmd **path_list)
 }
 
 /*Add a new node at the beginning of the paths_list*/
-t_cmd	*add_path(char *path, char **path_and_cmd)
+t_cmd	*add_path(char *path, char **p_f)
 {
 	t_cmd	*new_path;
 
@@ -60,7 +60,7 @@ t_cmd	*add_path(char *path, char **path_and_cmd)
 	if (!new_path)
 		return (NULL);
 	new_path->path = path;
-	new_path->path_and_cmd = path_and_cmd;
+	new_path->p_f = p_f;
 	new_path->next = NULL;
 	new_path->prev = NULL;
 	return (new_path);
