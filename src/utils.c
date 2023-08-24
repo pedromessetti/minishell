@@ -12,9 +12,16 @@
 
 #include "minishell.h"
 
-int	haspipe(char *s)
+int	has_pipe(char *s)
 {
 	if (ft_strnstr(s, "|", ft_strlen(s)))
+		return (1);
+	return (0);
+}
+
+int	has_redirections(char *s)
+{
+	if (ft_strnstr(s, "<", ft_strlen(s)) || ft_strnstr(s, ">", ft_strlen(s)))
 		return (1);
 	return (0);
 }

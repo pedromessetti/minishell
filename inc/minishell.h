@@ -106,11 +106,15 @@ t_cmd				*find_multiple_path(t_cmd *path_list, char **possible_paths,
 						char *av, char **p_f);
 void				close_all_pipes(t_cmd *list);
 
+/* --- Redirections --- */
+
+int	has_redirections(char *s);
+
 /* --- Utils Functions --- */
 
 char				*ft_strip(char *str);
 void				print_list(t_cmd *list);
-int					haspipe(char *s);
+int					has_pipe(char *s);
 
 
 

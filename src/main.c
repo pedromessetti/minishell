@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/07/15 07:08:26 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/24 17:59:29 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,41 @@ char	*handle_variable(char *var, char **envp)
 	return (NULL);
 }
 
-void	handle_arg(char *buf, char **envp)
+void is_input(char *input){
+	char *ocurr = NULL;
+	if ((ocurr = ft_strnstr(input, "<", ft_strlen(input))))
+	{
+		++ocurr;
+		if (ft_isspace(*ocurr))
+			++ocurr;
+		char **tmp = ft_split(ocurr, ' ');
+		int infile = open(tmp[0], O_RDONLY);
+		if (infile == -1)
+		{
+			ft_printf(RED "minishell: ");
+			perror(tmp[0]);
+			ft_printf(RESET);
+		}
+		else
+			printf("file opened\n");
+		free_matrix(tmp);
+	}
+}
+
+void	handle_arg(char *input, char **envp)
 {
 	char	**args;
 	t_cmd	*list;
 
 	list = NULL;
-	if (!buf[0] || ft_str_isspace(buf) || (has_variable(buf) && !valid_variable(buf, envp)))
+	if (!input[0] || ft_str_isspace(input) || (has_variable(input) && !valid_variable(input, envp)))
 		return ;
-	if (haspipe(buf))
+	if (has_redirections(input)) {
+		is_input(input);
+	}
+	if (has_pipe(input))
 	{
-		args = ft_split(buf, '|');
+		args = ft_split(input, '|');
 		list = define_multiple_path(list, args, envp);
 		start_process(list, envp);
 		free_matrix(args);
@@ -76,7 +100,7 @@ void	handle_arg(char *buf, char **envp)
 	}
 	else
 	{
-		list = define_path(list, buf, envp);
+		list = define_path(list, input, envp);
 		list->pid = fork();
 		if (list->pid == 0)
 		{
@@ -97,7 +121,7 @@ void	init(char **envp)
 	{
 		input = readline(WHITE "minishell> " RESET);
 		add_history(input);
-		if (ft_strncmp(input, "exit", 4) == 0)
+		if (ft_strncmp(input, "exit", ft_strlen(input)) == 0)
 		{
 			free(input);
 			exit(EXIT_SUCCESS);
