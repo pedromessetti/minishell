@@ -15,7 +15,7 @@
 void	ft_putchar(char c, unsigned int *size)
 {
 	*size += 1;
-	write(1, &c, 1);
+	write(2, &c, 1);
 }
 
 void	ft_putstr(char *s, unsigned int *size)
