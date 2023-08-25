@@ -14,8 +14,8 @@
 #include "minishell.h"
 
 /*Find the correct path by tryng to acess all the possible paths*/
-t_cmd	*find_multiple_path(t_cmd *path_list, char **possible_paths, char *av,
-		char **p_f)
+t_cmd_tb	*find_multiple_path(t_cmd_tb *path_list, char **possible_paths, char *av,
+		char **args)
 {
 	int		i;
 	char	*tmp;
@@ -24,7 +24,7 @@ t_cmd	*find_multiple_path(t_cmd *path_list, char **possible_paths, char *av,
 	i = -1;
 	while (possible_paths[++i])
 	{
-		tmp = ft_multi_strjoin("/", possible_paths[i], p_f[0], NULL);
+		tmp = ft_multi_strjoin("/", possible_paths[i], args[0], NULL);
 		if (!access(tmp, F_OK))
 			break ;
 		if (possible_paths[i + 1])
@@ -32,38 +32,38 @@ t_cmd	*find_multiple_path(t_cmd *path_list, char **possible_paths, char *av,
 	}
 	if (!tmp || (!possible_paths[i] && !check_builtin(av)))
 		ft_printf(RED "minishell: %s: command not found\n" RESET,
-			p_f[0]);
-	free(p_f[0]);
-	p_f[0] = tmp;
-	path_list = set_cmd_list(path_list, p_f[0], p_f);
+			args[0]);
+	free(args[0]);
+	args[0] = tmp;
+	path_list = set_cmd_tb_list(path_list, args[0], args);
 	return (path_list);
 }
 
-t_cmd	*choose_multiple_handle(char *av, char **envp, t_cmd *path_list)
+t_cmd_tb	*choose_multiple_handle(char *av, char **envp, t_cmd_tb *path_list)
 {
-	char	**p_f;
+	char	**args;
 	char	**possible_paths;
 
-	p_f = ft_split(av, ' ');
+	args = ft_split(av, ' ');
 	if (ft_isdir(av))
 	{
-		if (access(p_f[0], F_OK) == -1)
+		if (access(args[0], F_OK) == -1)
 			ft_printf(RED "minishell: %s: No such file or directory\n" RESET,
-				p_f[0]);
-		path_list = set_cmd_list(path_list, p_f[0], p_f);
+				args[0]);
+		path_list = set_cmd_tb_list(path_list, args[0], args);
 	}
 	else
 	{
 		possible_paths = set_possible_paths(envp);
 		path_list = find_multiple_path(path_list, possible_paths, av,
-			p_f);
+			args);
 		free_matrix(possible_paths);
 	}
 	return (path_list);
 }
 
 /*Main function to define if the argv is an absolute path or not*/
-t_cmd	*define_multiple_path(t_cmd *list, char **av, char **envp)
+t_cmd_tb	*define_multiple_path(t_cmd_tb *list, char **av, char **envp)
 {
 	int		i;
 	char	*var;

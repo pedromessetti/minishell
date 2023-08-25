@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-void	child_process(t_cmd *path_list, char **envp)
+void	child_process(t_cmd_tb *path_list, char **envp)
 {
 	if (path_list->path)
-		execve(path_list->path, path_list->p_f, envp);
+		execve(path_list->path, path_list->args, envp);
 	free_path_list(&path_list);
 	exit(EXIT_FAILURE);
 }

@@ -14,7 +14,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I inc -fsanitize=address
 
 # Source and object files
-SRCS =	$(wildcard ./src/*.c)
+SRCS = src/main.c src/checks.c #$(wildcard ./src/*.c) 
 OBJS = $(SRCS:.c=.o)
 
 # Formatting characters

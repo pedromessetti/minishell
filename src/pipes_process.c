@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/08/24 14:48:36 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/08/25 09:40:42 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 int		g_last_exit_status = 0;
 
-void	exec_cmd(t_cmd *path_list, char **envp)
+void	exec_cmd(t_cmd_tb *path_list, char **envp)
 {
 	if (path_list->path)
-		execve(path_list->path, path_list->p_f, envp);
+		execve(path_list->path, path_list->args, envp);
 	close(path_list->dup2_fd[0]);
 	close(path_list->dup2_fd[1]);
 	free_path_list(&path_list);
 	exit(EXIT_FAILURE);
 }
 
-void	bind_stdin(t_cmd *curr)
+void	bind_stdin(t_cmd_tb *curr)
 {
 	if (curr->prev)
 		curr->dup2_fd[0] = dup2(curr->prev->pipe_fd[0], STDIN_FILENO);
@@ -33,7 +33,7 @@ void	bind_stdin(t_cmd *curr)
 	close(curr->pipe_fd[0]);
 }
 
-void	bind_stdout(t_cmd *curr)
+void	bind_stdout(t_cmd_tb *curr)
 {
 	if (curr->next)
 		curr->dup2_fd[1] = dup2(curr->pipe_fd[1], STDOUT_FILENO);
@@ -42,9 +42,9 @@ void	bind_stdout(t_cmd *curr)
 	close(curr->pipe_fd[1]);
 }
 
-void	close_all_pipes(t_cmd *list)
+void	close_all_pipes(t_cmd_tb *list)
 {
-	t_cmd	*tmp;
+	t_cmd_tb	*tmp;
 
 	tmp = list;
 	while (tmp)
@@ -55,7 +55,7 @@ void	close_all_pipes(t_cmd *list)
 	}
 }
 
-int	ft_wait(t_cmd *curr)
+int	ft_wait(t_cmd_tb *curr)
 {
 	int	exit_status;
 
@@ -69,9 +69,9 @@ int	ft_wait(t_cmd *curr)
 	return (exit_status);
 }
 
-int	start_process(t_cmd *path_list, char **envp)
+int	start_process(t_cmd_tb *path_list, char **envp)
 {
-	t_cmd *curr;
+	t_cmd_tb *curr;
 
 	curr = path_list;
 	while (curr)
@@ -85,7 +85,7 @@ int	start_process(t_cmd *path_list, char **envp)
 				bind_stdin(curr);
 			if (curr->next)
 				bind_stdout(curr);
-			if (ask_for_exit_status(curr->p_f))
+			if (ask_for_exit_status(curr->args))
 				exit(g_last_exit_status);
 			exec_cmd(curr, envp);
 		}
