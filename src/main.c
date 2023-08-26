@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/25 11:55:08 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/26 18:06:28 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,28 +113,54 @@
 // 	}
 // }
 
-#define TOKEN_IDENTIFIER 0 		// commands, program name and other user-defined (ex: ls, ./minishell)
-#define TOKEN_OPERATOR 1			// operators	(ex: |, <, >)
-#define TOKEN_LITERAL 2				// literals strings (ex: "hello 123")
-#define TOKEN_ENV_VARIABLE 3	// environment variables (ex: $PATH)
-#define TOKEN_ARG 4						// arguments (ex: ls -l)
+int is_literal_string(char *str, int len)
+{
+	if (len < 2)
+		return 0;
+	if ((str[0] == '"' && str[len-1] == '"') || (str[0] == '\'' && str[len-1] == '\''))
+		return 1;
+	return 0;
+}
+
+// Check if the string is a keyword
+int is_keyword(char *str, int len)
+{
+	if (len == 4 && ft_strncmp(str, "exit", 4) == 0)
+		return (1);
+	if (len == 2 && ft_strncmp(str, "cd", 2) == 0)
+		return (1);
+	if (len == 6 && ft_strncmp(str, "export", 6) == 0)
+		return (1);
+	if (len == 5 && ft_strncmp(str, "unset", 5) == 0)
+		return (1);
+	if (len == 4 && ft_strncmp(str, "echo", 4) == 0) // Td q vier dps até um operator sera considerado literal string
+		return (1);																		// lidar com -n
+	if (len == 3 && ft_strncmp(str, "env", 3) == 0)
+		return (1);
+	if (len == 3 && ft_strncmp(str, "pwd", 3) == 0)
+		return (1);
+	return 0;
+}
 
 int	identify_token_type(char *str, int len)
 {
+	// Check if the string is a keyword
+	if (is_keyword(str, len))
+		return (TOKEN_KEYWORD);
 	// Check if the string is an identifier
-	if (ft_isalpha(str[0]))
+	if (ft_isalpha(str[0]) || ft_isdir(str))
 		return (TOKEN_IDENTIFIER);
 	// Check if the string is an operator
 	if (len == 1 && ft_strchr("|<>", str[0]))
 		return (TOKEN_OPERATOR);
-	// Check if the string is a literal
-	if (ft_isnum(str[0])) // Implement logic for parsing strings inside quotes
+	// Check if is a literal string (inside quotes)
+	if (is_literal_string(str, len))
 		return (TOKEN_LITERAL);
 	// Check if the string is an environment variable
 	if (str[0] == '$')
 		return (TOKEN_ENV_VARIABLE);
 	// Check if the string is an argument
-	if (ft_isprint(str[0]))
+	if (str[0] == '-')
 		return (TOKEN_ARG);
 	// If doesn't satisfy any tokens, return an error
 	return (-1);
@@ -155,7 +181,7 @@ void	lexical_analysis(char *prompt)
 	int	end;
 	int	type;
 
-	t_token tokens[100]; // Ajustar tamanho depois
+	t_token tokens[100]; // malloc depois
 	token_count = 0;
 	i = 0;
 	while (prompt[i])
@@ -163,7 +189,7 @@ void	lexical_analysis(char *prompt)
 		// Skip whitespaces
 		if (ft_isspace(prompt[i]))
 			i++;
-		// Identify token boundaries
+		// Token boundaries
 		start = i;
 		end = start;
 		while (prompt[end] && !ft_isspace(prompt[end]))
@@ -177,10 +203,9 @@ void	lexical_analysis(char *prompt)
 	}
 	// Print the extracted tokens
 	for (int j = 0; j < token_count; j++)
-	{
-		printf("Token Type: %d, Content: %s\n", tokens[j].type,
-				tokens[j].content);
-	}
+		printf("===Token===\nType: %d\nContent: %s\n===========\n", tokens[j].type, tokens[j].content);
+		
+	//Pass the tokens to the parser
 }
 
 void	init(char **envp)
