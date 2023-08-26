@@ -3,11 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+
-	+#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/17 09:15:32 by pmessett             #+#    #+#             */
-/*   Updated: 2023/07/11 08:55:14 by pmessett            ###   ########.fr       */
+/*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
+/*   Updated: 2023/08/26 20:36:34 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +35,24 @@
 # define WHITE "\033[0;37m"
 # define RESET "\033[0m"
 
-/* --- Main Structure --- */
+/* --- Tokens --- */
+
+#define TOKEN_IDENTIFIER 0 		// commands, program name and other user-defined (ex: ls, ./minishell)
+#define TOKEN_OPERATOR 1			// operators	(ex: |, <, >)
+#define TOKEN_LITERAL 2				// literals strings (ex: "hello 123")
+#define TOKEN_ENV_VARIABLE 3	// environment variables (ex: $PATH)
+#define TOKEN_ARG 4						// arguments (ex: ls -l, -l is an argument)
+#define TOKEN_KEYWORD 5				// keywords (ex: exit, cd, export, unset, echo, env, pwd)
+
+/* --- Token Type Structure --- */
 
 typedef struct s_token
 {
 	int	type;
 	char content[100]; // Ajustar size depois
 }		t_token;
+
+/* --- Command Table Structure --- */
 
 typedef struct s_cmd
 {
@@ -51,8 +61,6 @@ typedef struct s_cmd
 	pid_t			pid;
 	int				pipe_fd[2];
 	int				dup2_fd[2];
-	char 			*input_redir;
-	char 			*output_redir;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd_tb;
@@ -121,8 +129,6 @@ void				check_ac(int ac);
 // char				*ft_strip(char *str);
 // void				print_list(t_cmd_tb *list);
 // int					has_pipe(char *s);
-
-
 
 // char	*handle_variable(char *var, char **envp);
 
