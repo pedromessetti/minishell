@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/26 20:36:34 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/27 13:52:52 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@
 /* --- Macro Colors --- */
 
 # define RED "\033[0;31m"
-# define GREEN "\033[0;32m"
-# define BLUE "\033[0;34m"
-# define YELLOW "\033[0;33m"
 # define WHITE "\033[0;37m"
 # define RESET "\033[0m"
 
@@ -43,6 +40,7 @@
 #define TOKEN_ENV_VARIABLE 3	// environment variables (ex: $PATH)
 #define TOKEN_ARG 4						// arguments (ex: ls -l, -l is an argument)
 #define TOKEN_KEYWORD 5				// keywords (ex: exit, cd, export, unset, echo, env, pwd)
+#define TOKEN_FILE 6					
 
 /* --- Token Type Structure --- */
 
@@ -64,6 +62,22 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd_tb;
+
+/* --- Lexical Analysis --- */
+
+void	lex(char *prompt);
+void	create_token(t_token *token, int type, char *str, int len);
+int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag);
+int is_keyword(char *str, int len);
+int is_literal_string(char *str, int len);
+
+// /* --- Checker Functions --- */
+
+void				check_ac(int ac);
+// int					*check_fd(int fd[], char **av, int ac);
+// int					check_builtin(char *av);
+// void				check_exit_status(t_cmd_tb *path_list);
+// int					ask_for_exit_status(char **args);
 
 // /* --- Global Variable --- */
 
@@ -95,14 +109,6 @@ typedef struct s_cmd
 // int					ft_wait(t_cmd_tb *curr);
 // int					start_process(t_cmd_tb *path_list, char **envp);
 // void				exec_cmd(t_cmd_tb *path_list, char **envp);
-
-// /* --- Checker Functions --- */
-
-void				check_ac(int ac);
-// int					*check_fd(int fd[], char **av, int ac);
-// int					check_builtin(char *av);
-// void				check_exit_status(t_cmd_tb *path_list);
-// int					ask_for_exit_status(char **args);
 
 // /* --- Heredoc Functions --- */
 
