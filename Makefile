@@ -14,13 +14,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I inc -fsanitize=address
 
 # Source and object files
-SRCS = src/main.c src/checks.c #$(wildcard ./src/*.c) 
+SRCS = src/checks.c src/lex.c src/main.c #src/test.c #$(wildcard ./src/*.c) 
 OBJS = $(SRCS:.c=.o)
-
-# Formatting characters
-CHAR = =-=
-NUM = 7
-REPEATED_CHARS = $(call repeat_char,$(shell seq $(NUM)))
 
 # Default target
 $(NAME):	$(OBJS)
@@ -39,7 +34,7 @@ clean:
 
 # Clean object files and the executable
 fclean: clean
-	rm -f $(NAME) history
+	rm -f $(NAME)
 
 # Rebuild the project
 re: fclean $(NAME)
@@ -60,8 +55,3 @@ help:
 	echo "  fclean     Remove object files and executable"
 	echo "  re         Rebuild project"
 	echo "  run        Rebuild project and remove object files"
-
-# Define repeat_char function
-define repeat_char
-$(strip $(if $(firstword $(1)), $(CHAR)$(call repeat_char,$(subst $(firstword $(1)),,$(1)))))
-endef
