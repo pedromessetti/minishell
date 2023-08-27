@@ -53,9 +53,9 @@ int	main(void) {
 	lex(test_5);
 	printf("\n%s\n", test_6);
 	lex(test_6);
-	// printf("\n%s\n", test_7);
-	// lex(test_7);
-	// printf("\n%s\n", test_8);
-	// lex(test_8);
+	printf("\n%s\n", test_7);
+	lex(test_7);
+	printf("\n%s\n", test_8);
+	lex(test_8);
 	return (0);
 }
