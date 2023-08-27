@@ -1,4 +1,4 @@
-name: minishell - ContinuosIntegrationContinuosDelivery
+name: minishell - CI/CD
 
 on:
   push:
@@ -8,20 +8,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+
     steps:
       - uses: actions/checkout@v2
       - name: Rebuild
         run: make re
       - name: Test lexical analysis
         run: gcc -g -I inc -L./libft -lft src/test.c src/lex.c libft/libft.a && ./a.out > test_out.txt
-      - name: Compare output
+      - name: Compare output files
         run: diff -q test_out.txt correct_out.txt
-      - name: Push to master
-        if: ${{ steps.compare_output.outcome != 'failure' }}
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Update test results"
-          git push origin master
+      - name: Clean
+        run: make fclean && rm -f a.out test_out.txt
