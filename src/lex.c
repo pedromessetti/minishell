@@ -41,29 +41,29 @@ int is_identifier(char *str, int len)
 
 int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag)
 {
-	// // Check if the string is an argument (if flag is set)
-	// if (*next_token_type == TOKEN_ARG) {
-	// 		*next_token_type = -1; // Reset the flag
-	// 		return (TOKEN_ARG);
-	// }
-	// // Check if the string is a file (if flag is set)
-	// if (*next_token_type == TOKEN_FILE) {
-	// 		*next_token_type = -1;
-	// 		return (TOKEN_FILE);
-	// }
-	// // Check if the string is a keyword
-	// if (is_keyword(str, len))
-	// {
-	// 	if (ft_strncmp(str, "echo", 4) == 0)
-	// 	{
-	// 		*echo_flag = 1; // Set flag for literal string
-	// 		return (TOKEN_KEYWORD);
-	// 	}
-	// 	return (TOKEN_KEYWORD);
-	// }
-	// // Check if the string is an identifier
-	// if (ft_isalnum(str[0]) || ft_isdir(str))
-	// 	return (TOKEN_IDENTIFIER);
+	// Check if the string is an argument (if flag is set)
+	if (*next_token_type == TOKEN_ARG) {
+			*next_token_type = -1; // Reset the flag
+			return (TOKEN_FILE);
+	}
+	// Check if the string is a file (if flag is set)
+	if (*next_token_type == TOKEN_FILE) {
+			*next_token_type = -1;
+			return (TOKEN_IDENTIFIER);
+	}
+	// Check if the string is a keyword
+	if (is_keyword(str, len))
+	{
+		if (ft_strncmp(str, "echo", 4) == 0)
+		{
+			*echo_flag = 1; // Set flag for literal string
+			return (TOKEN_KEYWORD);
+		}
+		return (TOKEN_KEYWORD);
+	}
+	// Check if the string is an identifier
+	if (ft_isalnum(str[0]) || ft_isdir(str))
+		return (TOKEN_IDENTIFIER);
 	// Check if the string is an operator
 	if (len == 1 && ft_strchr("|<>", str[0]))
 		return (TOKEN_OPERATOR);
