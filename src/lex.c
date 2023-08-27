@@ -44,12 +44,12 @@ int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag
 	// Check if the string is an argument (if flag is set)
 	if (*next_token_type == TOKEN_ARG) {
 			*next_token_type = -1; // Reset the flag
-			return (TOKEN_FILE);
+			return (TOKEN_ARG);
 	}
 	// Check if the string is a file (if flag is set)
 	if (*next_token_type == TOKEN_FILE) {
 			*next_token_type = -1;
-			return (TOKEN_IDENTIFIER);
+			return (TOKEN_FILE);
 	}
 	// Check if the string is a keyword
 	if (is_keyword(str, len))
