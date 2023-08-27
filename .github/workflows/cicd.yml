@@ -1,0 +1,27 @@
+name: minishell - ContinuosIntegrationContinuosDelivery
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Rebuild
+        run: make re
+      - name: Test lexical analysis
+        run: gcc -g -I inc -L./libft -lft src/test.c src/lex.c libft/libft.a && ./a.out > test_out.txt
+      - name: Compare output
+        run: diff -q test_out.txt correct_out.txt
+      - name: Push to master
+        if: ${{ steps.compare_output.outcome != 'failure' }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update test results"
+          git push origin master
