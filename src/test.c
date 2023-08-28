@@ -23,9 +23,9 @@ int	main(int ac, char **av, char **envp) {
 	char *test_15 = "cat < Makefile | ls | grep inc | -l | cat";
 	char *test_16 = "cat < Makefile | ls | grep inc | -l | cat | -l";
 	char *test_17 = "cat < Makefile | ls -l | grep inc | -l | cat -e";
+	char *test_18 = "-l | -l | -a | -c | -x -a";
 
 	// To be implemented
-	// char *test_ = "-l | -l | -a | -c | -x -a"; // -x has to be interpreted as a identifier and -a ??
 	// char *test_ = "'single quoted'"; // has to be interpreted as a identifier
 	// char *test_ = "\"double quoted\""; // has to be interpreted as a identifier
 	// char *test_ = "cat <Makefile";
@@ -85,5 +85,7 @@ int	main(int ac, char **av, char **envp) {
 	lex(test_16, envp);
 	printf("\n%s\n", test_17);
 	lex(test_17, envp);
+	printf("\n%s\n", test_18);
+	lex(test_18, envp);
 	return (0);
 }

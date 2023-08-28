@@ -154,3 +154,16 @@ token[10] | type: 0 | content: -l
 token[11] | type: 1 | content: |
 token[12] | type: 0 | content: cat
 token[13] | type: 4 | content: -e
+
+-l | -l | -a | -c | -x -a
+token_count: 10
+token[0] | type: 0 | content: -l
+token[1] | type: 1 | content: |
+token[2] | type: 0 | content: -l
+token[3] | type: 1 | content: |
+token[4] | type: 0 | content: -a
+token[5] | type: 1 | content: |
+token[6] | type: 0 | content: -c
+token[7] | type: 1 | content: |
+token[8] | type: 0 | content: -x
+token[9] | type: 4 | content: -a
