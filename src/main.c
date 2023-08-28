@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/27 11:44:19 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/28 15:31:08 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	init(char **envp)
 			free(prompt);
 			exit(EXIT_SUCCESS);
 		}
-		lex(prompt);
+		lex(prompt, envp);
 		free(prompt);
 	}
 }
