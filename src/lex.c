@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/28 12:11:43 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/28 13:44:55 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,28 @@ int is_redirection(char *str, int len)
 	return 0;
 }
 
+int merge_literal(t_token *tokens, int token_count)
+{
+	int i = -1;
+	while(++i < token_count - 1)
+	{
+		if (tokens[i].type == TOKEN_LITERAL && tokens[i+1].type == TOKEN_LITERAL)
+		{
+			ft_strcat(tokens[i].content, " ");
+			ft_strcat(tokens[i].content, tokens[i+1].content);
+			int j = i+1;
+			while (j < token_count - 1)
+			{
+				tokens[j] = tokens[j+1];
+				j++;
+			}
+			token_count--;
+			i--;
+		}
+	}
+	return (token_count);
+}
+
 void	lex(char *prompt)
 {
 	int	i;
@@ -158,29 +180,13 @@ void	lex(char *prompt)
 	}
 	
 	// Merge adjacent literal tokens
-	i = -1;
-	while(++i < token_count - 1)
-	{
-		if (tokens[i].type == TOKEN_LITERAL && tokens[i+1].type == TOKEN_LITERAL)
-		{
-			ft_strcat(tokens[i].content, " ");
-			ft_strcat(tokens[i].content, tokens[i+1].content);
-			int j = i+1;
-			while (j < token_count - 1)
-			{
-				tokens[j] = tokens[j+1];
-				j++;
-			}
-			token_count--;
-			i--;
-		}
-	}
+	token_count = merge_literal(tokens, token_count);
 	
 	printf("token_count: %d\n", token_count);
 	// Print the extracted tokens
 	for (int j = 0; j < token_count; j++)
 		printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
-		
+
 	//Pass the tokens to the parser
 	//parser(tokens, token_count);
 }
