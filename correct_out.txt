@@ -93,3 +93,64 @@ token[0] | type: 5 | content: echo
 token[1] | type: 2 | content: "Hello, world!"
 token[2] | type: 1 | content: |
 token[3] | type: 0 | content: cat
+
+-l
+token_count: 1
+token[0] | type: 0 | content: -l
+
+-l | -l | -a
+token_count: 5
+token[0] | type: 0 | content: -l
+token[1] | type: 1 | content: |
+token[2] | type: 0 | content: -l
+token[3] | type: 1 | content: |
+token[4] | type: 0 | content: -a
+
+cat < Makefile | ls | grep inc | -l | cat
+token_count: 12
+token[0] | type: 0 | content: cat
+token[1] | type: 1 | content: <
+token[2] | type: 6 | content: Makefile
+token[3] | type: 1 | content: |
+token[4] | type: 0 | content: ls
+token[5] | type: 1 | content: |
+token[6] | type: 0 | content: grep
+token[7] | type: 4 | content: inc
+token[8] | type: 1 | content: |
+token[9] | type: 0 | content: -l
+token[10] | type: 1 | content: |
+token[11] | type: 0 | content: cat
+
+cat < Makefile | ls | grep inc | -l | cat | -l
+token_count: 14
+token[0] | type: 0 | content: cat
+token[1] | type: 1 | content: <
+token[2] | type: 6 | content: Makefile
+token[3] | type: 1 | content: |
+token[4] | type: 0 | content: ls
+token[5] | type: 1 | content: |
+token[6] | type: 0 | content: grep
+token[7] | type: 4 | content: inc
+token[8] | type: 1 | content: |
+token[9] | type: 0 | content: -l
+token[10] | type: 1 | content: |
+token[11] | type: 0 | content: cat
+token[12] | type: 1 | content: |
+token[13] | type: 0 | content: -l
+
+cat < Makefile | ls -l | grep inc | -l | cat -e
+token_count: 14
+token[0] | type: 0 | content: cat
+token[1] | type: 1 | content: <
+token[2] | type: 6 | content: Makefile
+token[3] | type: 1 | content: |
+token[4] | type: 0 | content: ls
+token[5] | type: 4 | content: -l
+token[6] | type: 1 | content: |
+token[7] | type: 0 | content: grep
+token[8] | type: 4 | content: inc
+token[9] | type: 1 | content: |
+token[10] | type: 0 | content: -l
+token[11] | type: 1 | content: |
+token[12] | type: 0 | content: cat
+token[13] | type: 4 | content: -e
