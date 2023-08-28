@@ -66,3 +66,30 @@ token[1] | type: 1 | content: |
 token[2] | type: 0 | content: abc
 token[3] | type: 1 | content: |
 token[4] | type: 0 | content: 456
+
+echo	"Hello,	world!"
+ls
+
+token_count: 1
+token[0] | type: 0 | content: echo	"Hello,	world!"
+ls
+
+
+   echo  "Hello,  world!"  
+token_count: 4
+token[0] | type: -1 | content: 
+token[1] | type: -1 | content: 
+token[2] | type: 5 | content: echo
+token[3] | type: 2 | content:  "Hello,  world!"  
+
+echo "Hello, world!"
+token_count: 2
+token[0] | type: 5 | content: echo
+token[1] | type: 2 | content: "Hello, world!"
+
+echo "Hello, world!" | cat
+token_count: 4
+token[0] | type: 5 | content: echo
+token[1] | type: 2 | content: "Hello, world!"
+token[2] | type: 1 | content: |
+token[3] | type: 0 | content: cat

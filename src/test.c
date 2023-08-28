@@ -10,6 +10,10 @@ int	main(void) {
 	char *test_6 = "< /libft/inc/libt.h";
 	char *test_7 = "cat < Makefile";
 	char *test_8 = "123 | abc | 456";
+	char *test_9 = "echo\t\"Hello,\tworld!\"\nls\n";
+	char *test_10 = "   echo  \"Hello,  world!\"  ";
+	char *test_11 = "echo \"Hello, world!\"";
+	char *test_12 = "echo \"Hello, world!\" | cat";
 
 	// To be implemented
 	// char *test_ = "'single quoted'"; // has to be interpreted as a identifier
@@ -36,10 +40,6 @@ int	main(void) {
 	// char *test_ = "";
 	// char *test_ = " ";
 	// char *test_ = "grep 'inc src'";
-	// char *test_ = "echo\t\"Hello,\tworld!\"\nls\n";
-	// char *test_ = "   echo  \"Hello,  world!\"  ";
-	// char *test_ = "echo \"Hello, world!\"";
-	// char *test_ = "echo \"Hello, world!\" | cat";
 
 	printf("----- TESTS FOR LEXICAL ANALYSIS -----\n");
 	printf("%s\n", test_1);
@@ -58,5 +58,13 @@ int	main(void) {
 	lex(test_7);
 	printf("\n%s\n", test_8);
 	lex(test_8);
+	printf("\n%s\n", test_9);
+	lex(test_9);
+	printf("\n%s\n", test_10);
+	lex(test_10);
+	printf("\n%s\n", test_11);
+	lex(test_11);
+	printf("\n%s\n", test_12);
+	lex(test_12);
 	return (0);
 }
