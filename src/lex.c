@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lex.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
+/*   Updated: 2023/08/28 12:11:43 by pedro            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int is_literal_string(char *str, int len)
@@ -46,11 +58,13 @@ int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag
 			*next_token_type = -1; // Reset the flag
 			return (TOKEN_ARG);
 	}
+
 	// Check if the string is a file (if flag is set)
 	if (*next_token_type == TOKEN_FILE) {
 			*next_token_type = -1;
 			return (TOKEN_FILE);
 	}
+	
 	// Check if the string is a keyword
 	if (is_keyword(str, len))
 	{
@@ -61,21 +75,27 @@ int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag
 		}
 		return (TOKEN_KEYWORD);
 	}
+	
 	// Check if the string is an identifier
 	if (ft_isalnum(str[0]) || ft_isdir(str))
 		return (TOKEN_IDENTIFIER);
+	
 	// Check if the string is an operator
 	if (len == 1 && ft_strchr("|<>", str[0]))
 		return (TOKEN_OPERATOR);
+	
 	// Check if is a literal string (inside quotes)
 	if (is_literal_string(str, len))
 		return (TOKEN_LITERAL);
+	
 	// Check if the string is an environment variable
 	if (str[0] == '$')
 		return (TOKEN_ENV_VARIABLE);
+	
 	// Check if the string is an argument
 	if (str[0] == '-')
 		return (TOKEN_ARG);
+	
 	// If doesn't satisfy any tokens, return an error
 	return (-1);
 }
@@ -111,13 +131,16 @@ void	lex(char *prompt)
 		// Skip whitespaces
 		if (ft_isspace(prompt[i]))
 			i++;
+		
 		// Token boundaries
 		start = i;
 		end = start;
 		while (prompt[end] && !ft_isspace(prompt[end]))
 			end++;
+		
 		// Identify and create tokens
 		type = identify_token_type(prompt + start, end - start, &next_token_type, &echo_flag);
+		
 		if (echo_flag && type != TOKEN_OPERATOR && type != TOKEN_KEYWORD)
 			type = TOKEN_LITERAL; // Treat as literal string
 		else if (type == TOKEN_OPERATOR)
@@ -126,16 +149,38 @@ void	lex(char *prompt)
 			next_token_type = TOKEN_ARG;
 		if (type == TOKEN_OPERATOR && is_redirection(prompt + start, end - start))
 			next_token_type = TOKEN_FILE;
+		
 		create_token(tokens + token_count, type, prompt + start, end - start);
 		token_count++;
+		
 		// Move to next token
 		i = end;
 	}
+	
+	// Merge adjacent literal tokens
+	i = -1;
+	while(++i < token_count - 1)
+	{
+		if (tokens[i].type == TOKEN_LITERAL && tokens[i+1].type == TOKEN_LITERAL)
+		{
+			ft_strcat(tokens[i].content, " ");
+			ft_strcat(tokens[i].content, tokens[i+1].content);
+			int j = i+1;
+			while (j < token_count - 1)
+			{
+				tokens[j] = tokens[j+1];
+				j++;
+			}
+			token_count--;
+			i--;
+		}
+	}
+	
 	printf("token_count: %d\n", token_count);
 	// Print the extracted tokens
 	for (int j = 0; j < token_count; j++)
 		printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
 		
 	//Pass the tokens to the parser
-	// parser(tokens, token_count);
+	//parser(tokens, token_count);
 }
