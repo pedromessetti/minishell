@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/27 13:52:52 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/28 15:38:20 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ typedef struct s_cmd
 
 /* --- Lexical Analysis --- */
 
-void	lex(char *prompt);
+void	lex(char *prompt, char **envp);
 void	create_token(t_token *token, int type, char *str, int len);
-int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag);
+int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag, int prev_token_type);
 int is_keyword(char *str, int len);
 int is_literal_string(char *str, int len);
 

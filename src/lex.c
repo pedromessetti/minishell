@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/28 13:44:55 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/28 15:42:59 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int is_identifier(char *str, int len)
 	return 0;
 }
 
-int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag)
+int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag, int prev_token_type)
 {
 	// Check if the string is an argument (if flag is set)
 	if (*next_token_type == TOKEN_ARG) {
@@ -77,7 +77,7 @@ int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag
 	}
 	
 	// Check if the string is an identifier
-	if (ft_isalnum(str[0]) || ft_isdir(str))
+	if ((ft_isalnum(str[0]) || ft_isdir(str)))
 		return (TOKEN_IDENTIFIER);
 	
 	// Check if the string is an operator
@@ -94,7 +94,12 @@ int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag
 	
 	// Check if the string is an argument
 	if (str[0] == '-')
-		return (TOKEN_ARG);
+	{
+		if (prev_token_type == TOKEN_IDENTIFIER)
+			return (TOKEN_ARG);
+		else
+			return (TOKEN_IDENTIFIER);
+	}
 	
 	// If doesn't satisfy any tokens, return an error
 	return (-1);
@@ -136,8 +141,9 @@ int merge_literal(t_token *tokens, int token_count)
 	return (token_count);
 }
 
-void	lex(char *prompt)
+void	lex(char *prompt, char **envp)
 {
+	(void)envp;
 	int	i;
 	int	start;
 	int	end;
@@ -146,6 +152,7 @@ void	lex(char *prompt)
 	int next_token_type = -1;
 	int echo_flag = 0;
 	t_token tokens[100]; // TODO: implement malloc
+	int prev_token_type = -1; // Initialize prev_token_type
 
 	i = 0;
 	while (prompt[i])
@@ -161,7 +168,7 @@ void	lex(char *prompt)
 			end++;
 		
 		// Identify and create tokens
-		type = identify_token_type(prompt + start, end - start, &next_token_type, &echo_flag);
+		type = identify_token_type(prompt + start, end - start, &next_token_type, &echo_flag, prev_token_type);
 		
 		if (echo_flag && type != TOKEN_OPERATOR && type != TOKEN_KEYWORD)
 			type = TOKEN_LITERAL; // Treat as literal string
@@ -173,6 +180,7 @@ void	lex(char *prompt)
 			next_token_type = TOKEN_FILE;
 		
 		create_token(tokens + token_count, type, prompt + start, end - start);
+		prev_token_type = type; // Update prev_token_type
 		token_count++;
 		
 		// Move to next token
@@ -188,5 +196,5 @@ void	lex(char *prompt)
 		printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
 
 	//Pass the tokens to the parser
-	//parser(tokens, token_count);
+	//parser(tokens, token_count, envp);
 }
