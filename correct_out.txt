@@ -1,6 +1,6 @@
 ----- TESTS FOR LEXICAL ANALYSIS -----
 cat < Makefile | ls -l | grep inc | echo 'how are you?' > file.txt | exit
-token_count: 18
+token_count: 16
 token[0] | type: 0 | content: cat
 token[1] | type: 1 | content: <
 token[2] | type: 6 | content: Makefile
@@ -12,13 +12,11 @@ token[7] | type: 0 | content: grep
 token[8] | type: 4 | content: inc
 token[9] | type: 1 | content: |
 token[10] | type: 5 | content: echo
-token[11] | type: 2 | content: 'how
-token[12] | type: 2 | content: are
-token[13] | type: 2 | content: you?'
-token[14] | type: 1 | content: >
-token[15] | type: 6 | content: file.txt
-token[16] | type: 1 | content: |
-token[17] | type: 5 | content: exit
+token[11] | type: 2 | content: 'how are you?'
+token[12] | type: 1 | content: >
+token[13] | type: 6 | content: file.txt
+token[14] | type: 1 | content: |
+token[15] | type: 5 | content: exit
 
 cd | export | unset | echo | env | pwd
 token_count: 11
