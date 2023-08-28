@@ -35,6 +35,7 @@ int	main(void) {
 	// char *test_ = "invalid|invalid|invalid";
 	// char *test_ = "";
 	// char *test_ = " ";
+	// char *test_ = "grep 'inc src'";
 	// char *test_ = "echo\t\"Hello,\tworld!\"\nls\n";
 	// char *test_ = "   echo  \"Hello,  world!\"  ";
 	// char *test_ = "echo \"Hello, world!\"";
