@@ -1,7 +1,11 @@
+// I know that is ugly but I will improve		:p
+
 #include "minishell.h"
 
 // Tests for Lexical Analysis
-int	main(void) {
+int	main(int ac, char **av, char **envp) {
+	(void)ac;
+	(void)av;
 	char *test_1 = "cat < Makefile | ls -l | grep inc | echo 'how are you?' > file.txt | exit";
 	char *test_2 = "cd | export | unset | echo | env | pwd";
 	char *test_3 = "$PATH | $HOME | $SHELL";
@@ -14,11 +18,16 @@ int	main(void) {
 	char *test_10 = "   echo  \"Hello,  world!\"  ";
 	char *test_11 = "echo \"Hello, world!\"";
 	char *test_12 = "echo \"Hello, world!\" | cat";
+	char *test_13 = "-l";
+	char *test_14 = "-l | -l | -a";
+	char *test_15 = "cat < Makefile | ls | grep inc | -l | cat";
+	char *test_16 = "cat < Makefile | ls | grep inc | -l | cat | -l";
+	char *test_17 = "cat < Makefile | ls -l | grep inc | -l | cat -e";
 
 	// To be implemented
+	// char *test_ = "-l | -l | -a | -c | -x -a"; // -x has to be interpreted as a identifier and -a ??
 	// char *test_ = "'single quoted'"; // has to be interpreted as a identifier
 	// char *test_ = "\"double quoted\""; // has to be interpreted as a identifier
-	// char *test_ = "-l"; // has to be interpreted as a identifier
 	// char *test_ = "cat <Makefile";
 	// char *test_ = "</libft/src/libft.h";
 	// char *test_ = "cd /libft/src/";
@@ -43,28 +52,38 @@ int	main(void) {
 
 	printf("----- TESTS FOR LEXICAL ANALYSIS -----\n");
 	printf("%s\n", test_1);
-	lex(test_1);
+	lex(test_1, envp);
 	printf("\n%s\n", test_2);
-	lex(test_2);
+	lex(test_2, envp);
 	printf("\n%s\n", test_3);
-	lex(test_3);
+	lex(test_3, envp);
 	printf("\n%s\n", test_4);
-	lex(test_4);
+	lex(test_4, envp);
 	printf("\n%s\n", test_5);
-	lex(test_5);
+	lex(test_5, envp);
 	printf("\n%s\n", test_6);
-	lex(test_6);
+	lex(test_6, envp);
 	printf("\n%s\n", test_7);
-	lex(test_7);
+	lex(test_7, envp);
 	printf("\n%s\n", test_8);
-	lex(test_8);
+	lex(test_8, envp);
 	printf("\n%s\n", test_9);
-	lex(test_9);
+	lex(test_9, envp);
 	printf("\n%s\n", test_10);
-	lex(test_10);
+	lex(test_10, envp);
 	printf("\n%s\n", test_11);
-	lex(test_11);
+	lex(test_11, envp);
 	printf("\n%s\n", test_12);
-	lex(test_12);
+	lex(test_12, envp);
+	printf("\n%s\n", test_13);
+	lex(test_13, envp);
+	printf("\n%s\n", test_14);
+	lex(test_14, envp);
+	printf("\n%s\n", test_15);
+	lex(test_15, envp);
+	printf("\n%s\n", test_16);	
+	lex(test_16, envp);
+	printf("\n%s\n", test_17);
+	lex(test_17, envp);
 	return (0);
 }
