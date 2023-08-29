@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 19:15:47 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/25 09:40:42 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/29 09:26:41 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ char	**set_possible_paths(char **envp)
 }
 
 /*Find the correct path by tryng to acess all the possible paths*/
-t_cmd_tb	*find_path(t_cmd_tb *path_list, char **possible_paths, char *av,
-		char **args)
+t_cmd_tb	*find_path(t_cmd_tb *path_list, char **possible_paths, char *cmd, char **args)
 {
 	int		i;
 	char	*tmp;
@@ -49,18 +48,18 @@ t_cmd_tb	*find_path(t_cmd_tb *path_list, char **possible_paths, char *av,
 	i = -1;
 	while (possible_paths[++i])
 	{
-		tmp = ft_multi_strjoin("/", possible_paths[i], args[0], NULL);
+		tmp = ft_multi_strjoin("/", possible_paths[i], cmd, NULL);
 		if (!access(tmp, F_OK))
 			break ;
 		if (possible_paths[i + 1])
 			free(tmp);
 	}
-	if (!tmp || (!possible_paths[i] && !check_builtin(av)))
+	if (!tmp || (!possible_paths[i]))
 		ft_printf(RED "minishell: %s: command not found\n" RESET,
-			args[0]);
-	free(args[0]);
-	args[0] = tmp;
-	path_list = set_cmd_tb_list(path_list, args[0], args);
+			cmd[0]);
+	// free(cmd);
+	cmd = tmp;
+	path_list = set_cmd_tb_list(path_list, cmd, args);
 	return (path_list);
 }
 
@@ -71,30 +70,29 @@ t_cmd_tb	*handle_str_error(char *buf, t_cmd_tb *path_list)
 	return (path_list);
 }
 
-t_cmd_tb	*choose_handle(char *buf, char **envp, t_cmd_tb *list)
+t_cmd_tb	*choose_handle(char *cmd, char **envp, t_cmd_tb *list, char **args)
 {
-	char	**args;
 	char	**possible_paths;
 
-	args = ft_split(buf, ' ');
-	if (ft_isdir(buf))
+	// Absolute path
+	if (ft_isdir(cmd))
 	{
-		if (access(args[0], F_OK) == -1)
+		if (access(list->path, F_OK) == -1)
 			ft_printf(RED "minishell: %s: No such file or directory\n" RESET,
 				args[0]);
-		list = set_cmd_tb_list(list, args[0], args);
+		list = set_cmd_tb_list(list,args[0], args);
 	}
 	else
 	{
 		possible_paths = set_possible_paths(envp);
-		list = find_path(list, possible_paths, buf, args);
+		list = find_path(list, possible_paths, cmd, args);
 		free_matrix(possible_paths);
 	}
 	return (list);
 }
 
 /*Main function to define if the argv is an absolute path or not*/
-t_cmd_tb	*define_path(t_cmd_tb *list, char *buf, char **envp)
+t_cmd_tb	*define_path(t_cmd_tb *list, char *buf, char **envp, char **args)
 {
 	char	*var;
 
@@ -106,9 +104,9 @@ t_cmd_tb	*define_path(t_cmd_tb *list, char *buf, char **envp)
 		var = handle_variable(var, envp);
 		if (!var)
 			return list = NULL;
-		list = choose_handle(++var, envp, list);
+		list = choose_handle(++var, envp, list,args);
 	}
 	else
-		list = choose_handle(buf, envp, list);
+		list = choose_handle(buf, envp, list,args);
 	return (list);
 }
