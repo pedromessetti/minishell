@@ -6,7 +6,7 @@
 int	main(int ac, char **av, char **envp) {
 	(void)ac;
 	(void)av;
-	char *test_1 = "cat < Makefile | ls -l | grep inc | echo 'how are you?' > file.txt | exit";
+	char *test_1 = "cat -e < Makefile | ls -l -a | grep inc | echo 'how are you?' > file.txt | exit";
 	char *test_2 = "cd | export | unset | echo | env | pwd";
 	char *test_3 = "$PATH | $HOME | $SHELL";
 	char *test_4 = "@invalid";
@@ -23,7 +23,7 @@ int	main(int ac, char **av, char **envp) {
 	char *test_15 = "cat < Makefile | ls | grep inc | -l | cat";
 	char *test_16 = "cat < Makefile | ls | grep inc | -l | cat | -l";
 	char *test_17 = "cat < Makefile | ls -l | grep inc | -l | cat -e";
-	char *test_18 = "-l | -l | -a | -c | -x -a";
+	char *test_18 = "-l | -z -k -y | -a | -c | -x -a";
 
 	// To be implemented
 	// char *test_ = "'single quoted'"; // has to be interpreted as a identifier

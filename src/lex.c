@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/29 13:55:24 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/08/29 14:24:25 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag
 	// Check if the string is an argument
 	if (str[0] == '-')
 	{
-		if (prev_token_type == TOKEN_IDENTIFIER)
+		if (prev_token_type == TOKEN_IDENTIFIER || prev_token_type == TOKEN_ARG)
 			return (TOKEN_ARG);
 		else
 			return (TOKEN_IDENTIFIER);
