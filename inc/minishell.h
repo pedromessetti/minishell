@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/28 15:38:20 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/29 13:23:09 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <sys/wait.h>
+# include <stddef.h>
 # include <unistd.h>
+
 
 /* --- Macro Colors --- */
 
@@ -70,7 +72,7 @@ void	create_token(t_token *token, int type, char *str, int len);
 int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag, int prev_token_type);
 int is_keyword(char *str, int len);
 int is_literal_string(char *str, int len);
-
+int parser(t_token *tokens, int token_count, char **envp);
 // /* --- Checker Functions --- */
 
 void				check_ac(int ac);
@@ -86,20 +88,19 @@ void				check_ac(int ac);
 // /* --- Path Functions --- */
 
 // char				**set_possible_paths(char **envp);
-// t_cmd_tb				*find_path(t_cmd_tb *path_list, char **possible_paths,
-// 						char *av, char **args);
+t_cmd_tb	*find_path(t_cmd_tb *path_list, char **possible_paths, char *cmd, char **args);
 // t_cmd_tb				*define_path(t_cmd_tb *list, char *buf, char **envp);
 // t_cmd_tb				*handle_str_error(char *buf, t_cmd_tb *path_list);
-// t_cmd_tb				*choose_handle(char *av, char **envp, t_cmd_tb *path_list);
+t_cmd_tb	*choose_handle(char *cmd, char **envp, t_cmd_tb *list, char **args);
 
 // /* --- List Functions --- */
 
-// t_cmd_tb				*add_path(char *path, char **args);
-// void				add_tail(t_cmd_tb **list_head, t_cmd_tb *new_path);
-// t_cmd_tb				*find_last(t_cmd_tb *paths_list);
-// void				free_path_list(t_cmd_tb **paths_list);
-// t_cmd_tb				*set_cmd_tb_list(t_cmd_tb *path_list, char *path,
-// 						char **args);
+t_cmd_tb				*add_path(char *path, char **args);
+void				add_tail(t_cmd_tb **list_head, t_cmd_tb *new_path);
+t_cmd_tb				*find_last(t_cmd_tb *paths_list);
+void				free_path_list(t_cmd_tb **paths_list);
+t_cmd_tb				*set_cmd_tb_list(t_cmd_tb *path_list, char *path,
+						char **args);
 
 // /* --- Child Process Functions --- */
 
