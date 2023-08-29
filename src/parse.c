@@ -6,7 +6,7 @@
 /*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/08/29 13:45:00 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/08/29 17:27:02 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@
  	t_cmd_tb *cmd_list = NULL;
     char **args = NULL;
  	int i = 0;
-    int j = 0;
  	while (i < token_count)
  	{
  		if (tokens[i].type == TOKEN_IDENTIFIER)
@@ -65,18 +64,31 @@
             while(tokens[i + args_count + 1].type == TOKEN_ARG)
                args_count++;
             args = (char **)malloc((args_count + 1) * sizeof(char *));
-             if (!args)
+            if (!args)
                 return -1;
+            int j = 0;    
             while(j < args_count)
             {
                 args[j] = ft_strdup(tokens[i + j + 1].content);
                 j++;
             }
             args[args_count] = NULL;
- 			// char **possible_paths = set_possible_paths(envp);
-            // args = get_arguments(tokens, i, token_count);
-            // cmd_list = find_path(cmd_list, possible_paths, tokens[i].content, args);
-            cmd_list = choose_handle(tokens[i].content, envp, cmd_list,args);
+            
+            printf("%s\n", tokens[i].content);
+            for(int k = 0; args[k]; k++)
+               printf("%s\n", args[k]);
+            
+            if (tokens[i].type == TOKEN_IDENTIFIER)
+            {
+               cmd_list = choose_handle(tokens[i].content, envp, cmd_list,args);
+               free_matrix(args);
+            }
+           if (tokens[i + args_count + 1].type == TOKEN_OPERATOR && strcmp(tokens[i + args_count + 1].content, "|") == 0)
+            {
+                printf("PIPE\n");
+                i += args_count + 2; // Skip pipe operator
+                continue; // Skip the rest of the loop to process the next cmd
+            }
             // if(cmd_list)
             // {
             //     cmd_list = set_cmd_tb_list(cmd_list, cmd_list->path, args);
