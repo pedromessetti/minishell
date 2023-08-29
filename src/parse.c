@@ -6,7 +6,7 @@
 /*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/08/29 11:19:47 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/08/29 13:45:00 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@
                 return -1;
             while(j < args_count)
             {
-                args[j] = strdup(tokens[i + j + 1].content);
+                args[j] = ft_strdup(tokens[i + j + 1].content);
                 j++;
             }
             args[args_count] = NULL;

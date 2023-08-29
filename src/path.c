@@ -6,7 +6,7 @@
 /*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 19:15:47 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/29 09:26:41 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/08/29 13:46:14 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,21 @@ t_cmd_tb	*choose_handle(char *cmd, char **envp, t_cmd_tb *list, char **args)
 }
 
 /*Main function to define if the argv is an absolute path or not*/
-t_cmd_tb	*define_path(t_cmd_tb *list, char *buf, char **envp, char **args)
-{
-	char	*var;
+// t_cmd_tb	*define_path(t_cmd_tb *list, char *buf, char **envp, char **args)
+// {
+// 	char	*var;
 
-	var = NULL;
-	if (ft_str_empty(buf))
-		list = handle_str_error(buf, list);
-	if ((var = ft_strnstr(buf, "$", ft_strlen(buf))))
-	{
-		var = handle_variable(var, envp);
-		if (!var)
-			return list = NULL;
-		list = choose_handle(++var, envp, list,args);
-	}
-	else
-		list = choose_handle(buf, envp, list,args);
-	return (list);
-}
+// 	var = NULL;
+// 	if (ft_str_empty(buf))
+// 		list = handle_str_error(buf, list);
+// 	if ((var = ft_strnstr(buf, "$", ft_strlen(buf))))
+// 	{
+// 		var = handle_variable(var, envp);
+// 		if (!var)
+// 			return list = NULL;
+// 		list = choose_handle(++var, envp, list,args);
+// 	}
+// 	else
+// 		list = choose_handle(buf, envp, list,args);
+// 	return (list);
+// }

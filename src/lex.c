@@ -6,7 +6,7 @@
 /*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/28 16:11:59 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/08/29 13:55:24 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,5 +196,5 @@ void	lex(char *prompt, char **envp)
 		printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
 
 	//Pass the tokens to the parser
-	parser(tokens, token_count, envp);
+	// parser(tokens, token_count, envp);
 }
