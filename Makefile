@@ -14,7 +14,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I inc -fsanitize=address
 
 # Source and object files
-SRCS = src/checks.c src/lex.c src/main.c #src/test.c #$(wildcard ./src/*.c) 
+SRCS = src/checks.c src/lex.c src/main.c src/parse.c src/list_utils.c src/path.c #$(wildcard ./src/*.c) 
 OBJS = $(SRCS:.c=.o)
 
 # Default target
