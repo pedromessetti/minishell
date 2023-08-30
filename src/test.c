@@ -38,11 +38,7 @@ int	main(int ac, char **av, char **envp) {
 	// char *test_ = ">invalid>";
 	// char *test_ = "<invalid<";
 	// char *test_ = "invalid|";
-	// char *test_ = "invalid>";
-	// char *test_ = "invalid<";
 	// char *test_ = "invalid$";
-	// char *test_ = "invalid@";
-	// char *test_ = "-invalid";
 	// char *test_ = "$invalid";
 	// char *test_ = "invalid|invalid";
 	// char *test_ = "invalid|invalid|invalid";
