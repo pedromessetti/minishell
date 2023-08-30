@@ -92,3 +92,18 @@ t_cmd_tb	*find_last(t_cmd_tb *paths_list)
 		paths_list = paths_list->next;
 	return (paths_list);
 }
+
+// Removable
+void	print_list(t_cmd_tb *list)
+{
+	t_cmd_tb *curr;
+
+	curr = list;
+	while (curr)
+	{
+		printf("path = %s\n", curr->path);
+		for (int i = 0; curr->args[i]; i++)
+			printf("args[%i] = %s\n", i, curr->args[i]);
+		curr = curr->next;
+	}
+}

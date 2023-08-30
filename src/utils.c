@@ -65,15 +65,3 @@ char	*ft_strip(char *str)
 	return (result);
 }
 
-void	print_list(t_cmd_tb *list)
-{
-	t_cmd_tb *curr;
-
-	curr = list;
-	while (curr)
-	{
-		for (int i = 0; curr->args[i]; i++)
-			printf("args[%i] = %s\n", i, curr->args[i]);
-		curr = curr->next;
-	}
-}
