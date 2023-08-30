@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/30 11:50:13 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/30 22:07:50 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,9 @@ void	create_token(t_token *token, int type, char *str, int len);
 int	identify_token_type(char *str, int len, int *next_token_type, int *echo_flag, int prev_token_type);
 int is_keyword(char *str, int len);
 int is_literal_string(char *str, int len);
-int parser(t_token *tokens, int token_count, char **envp);
+int parse(t_token *tokens, int token_count, char **envp);
+int parse_ident_arg(t_token *tokens, int token_count, char **envp, int start, t_cmd_tb **cmd_list);
+int parse_key_literal(t_token *tokens, int token_count, char **envp, int start, t_cmd_tb **cmd_list);
 // /* --- Checker Functions --- */
 
 void				check_ac(int ac);

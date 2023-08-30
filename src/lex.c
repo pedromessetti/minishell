@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/29 14:24:25 by pedro            ###   ########.fr       */
+/*   Updated: 2023/08/30 22:07:06 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,11 +190,11 @@ void	lex(char *prompt, char **envp)
 	// Merge adjacent literal tokens
 	token_count = merge_literal(tokens, token_count);
 	
-	printf("token_count: %d\n", token_count);
-	// Print the extracted tokens
-	for (int j = 0; j < token_count; j++)
-		printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
+	// printf("token_count: %d\n", token_count);
+	// // Print the extracted tokens
+	// for (int j = 0; j < token_count; j++)
+	// 	printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
 
 	//Pass the tokens to the parser
-	// parser(tokens, token_count, envp);
-}
+	// parse(tokens, token_count, envp);
+}	
