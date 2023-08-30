@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/29 13:23:09 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/08/30 11:50:13 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <sys/wait.h>
 # include <stddef.h>
 # include <unistd.h>
-
 
 /* --- Macro Colors --- */
 
@@ -101,15 +100,16 @@ t_cmd_tb				*find_last(t_cmd_tb *paths_list);
 void				free_path_list(t_cmd_tb **paths_list);
 t_cmd_tb				*set_cmd_tb_list(t_cmd_tb *path_list, char *path,
 						char **args);
+void				print_list(t_cmd_tb *list);
 
 // /* --- Child Process Functions --- */
 
-// void				child_process(t_cmd_tb *path_list, char **envp);
-// void				bind_stdin(t_cmd_tb *curr);
-// void				bind_stdout(t_cmd_tb *curr);
-// int					ft_wait(t_cmd_tb *curr);
-// int					start_process(t_cmd_tb *path_list, char **envp);
-// void				exec_cmd(t_cmd_tb *path_list, char **envp);
+void				child_process(t_cmd_tb *path_list, char **envp);
+void				bind_stdin(t_cmd_tb *curr);
+void				bind_stdout(t_cmd_tb *curr);
+int					ft_wait(t_cmd_tb *curr);
+int					start_process(t_cmd_tb *path_list, char **envp);
+void				exec_cmd(t_cmd_tb *path_list, char **envp);
 
 // /* --- Heredoc Functions --- */
 
@@ -134,7 +134,6 @@ t_cmd_tb				*set_cmd_tb_list(t_cmd_tb *path_list, char *path,
 // /* --- Utils Functions --- */
 
 // char				*ft_strip(char *str);
-// void				print_list(t_cmd_tb *list);
 // int					has_pipe(char *s);
 
 // char	*handle_variable(char *var, char **envp);

@@ -1,21 +1,102 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child_process.c                                    :+:      :+:    :+:   */
+/*   pipes_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/24 12:43:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/07/04 19:10:47 by pmessett            ###   ########.fr       */
+/*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
+/*   Updated: 2023/08/30 16:11:07 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	child_process(t_cmd_tb *path_list, char **envp)
+// int		g_last_exit_status = 0;
+
+void	exec_cmd(t_cmd_tb *cmd_list, char **envp)
 {
-	if (path_list->path)
-		execve(path_list->path, path_list->args, envp);
-	free_path_list(&path_list);
+	if (cmd_list->path)
+		execve(cmd_list->path, cmd_list->args, envp);
+	close(cmd_list->dup2_fd[0]);
+	close(cmd_list->dup2_fd[1]);
+	free_path_list(&cmd_list);
 	exit(EXIT_FAILURE);
+}
+
+void	bind_stdin(t_cmd_tb *curr)
+{
+	if (curr->prev)
+		curr->dup2_fd[0] = dup2(curr->prev->pipe_fd[0], STDIN_FILENO);
+	else
+		curr->dup2_fd[0] = dup2(curr->pipe_fd[0], STDIN_FILENO);
+	close(curr->pipe_fd[0]);
+}
+
+void	bind_stdout(t_cmd_tb *curr)
+{
+	if (curr->next)
+		curr->dup2_fd[1] = dup2(curr->pipe_fd[1], STDOUT_FILENO);
+	else
+		curr->dup2_fd[1] = dup2(curr->dup2_fd[1], STDOUT_FILENO);
+	close(curr->pipe_fd[1]);
+}
+
+void	close_all_pipes(t_cmd_tb *list)
+{
+	t_cmd_tb	*tmp;
+
+	tmp = list;
+	while (tmp)
+	{
+		close(tmp->pipe_fd[0]);
+		close(tmp->pipe_fd[1]);
+		tmp = tmp->next;
+	}
+}
+
+int	ft_wait(t_cmd_tb *curr)
+{
+	int	exit_status;
+
+	exit_status = 0;
+	while (curr)
+	{
+		waitpid(curr->pid, &exit_status, 0);
+		curr = curr->next;
+	}
+	// g_last_exit_status = exit_status;
+	return (exit_status);
+}
+
+int	start_process(t_cmd_tb *path_list, char **envp)
+{
+	t_cmd_tb *curr;
+	
+
+	curr = path_list;
+
+	while (curr)
+	{
+		if (pipe(curr->pipe_fd) == -1)
+			return (1);
+		curr->pid = fork();
+		if (curr->pid == 0)
+		{
+			if (curr != path_list)
+				bind_stdin(curr);
+			if (curr->next)
+				bind_stdout(curr);
+			exec_cmd(curr, envp);
+		}
+		if (curr != path_list)
+			close(curr->prev->pipe_fd[0]);
+		close(curr->pipe_fd[1]);
+		curr = curr->next;
+	}
+	close_all_pipes(path_list);
+	curr = path_list;
+	int exit_status = ft_wait(curr);
+	// free_path_list(&path_list);
+	return (exit_status);
 }
