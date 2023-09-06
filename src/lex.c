@@ -6,7 +6,7 @@
 /*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/31 10:06:52 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/09/06 10:59:28 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int is_keyword(char *str, int len)
 		return (1);
 	if (len == 5 && ft_strncmp(str, "unset", 5) == 0)
 		return (1);
-	if (len == 4 && ft_strncmp(str, "echo", 4) == 0) 	// TODO: everything after echo is an literal string and handle echo -n (echo -n "hello")
+	if (len == 4 && ft_strncmp(str, "echo", 4) == 0) 	
 		return (1);
 	if (len == 3 && ft_strncmp(str, "env", 3) == 0)
 		return (1);
@@ -192,9 +192,9 @@ void	lex(char *prompt, char **envp)
 	
 	// printf("token_count: %d\n", token_count);
 	// // Print the extracted tokens
-	for (int j = 0; j < token_count; j++)
-		printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
+	// for (int j = 0; j < token_count; j++)
+	// 	printf("token[%d] | type: %d | content: %s\n",j, tokens[j].type, tokens[j].content);
 
 	//Pass the tokens to the parser
-	// parse(tokens, token_count, envp);
+	parse(tokens, token_count, envp);
 }	

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes_process.c                                    :+:      :+:    :+:   */
+/*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/08/30 16:11:07 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/06 09:57:00 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ void	exec_cmd(t_cmd_tb *cmd_list, char **envp)
 void	bind_stdin(t_cmd_tb *curr)
 {
 	if (curr->prev)
+	{
+		printf("Redirecionando stdin do comando %s para o pipe de leitura do comando anterior\n", curr->args[0]);
 		curr->dup2_fd[0] = dup2(curr->prev->pipe_fd[0], STDIN_FILENO);
+	}
 	else
 		curr->dup2_fd[0] = dup2(curr->pipe_fd[0], STDIN_FILENO);
 	close(curr->pipe_fd[0]);
@@ -36,7 +39,10 @@ void	bind_stdin(t_cmd_tb *curr)
 void	bind_stdout(t_cmd_tb *curr)
 {
 	if (curr->next)
+	{
+		printf("Redirecionando stdout do comando %s para o pipe de escrita do próximo comando\n", curr->args[0]);
 		curr->dup2_fd[1] = dup2(curr->pipe_fd[1], STDOUT_FILENO);
+	}
 	else
 		curr->dup2_fd[1] = dup2(curr->dup2_fd[1], STDOUT_FILENO);
 	close(curr->pipe_fd[1]);
@@ -79,10 +85,14 @@ int	start_process(t_cmd_tb *path_list, char **envp)
 	while (curr)
 	{
 		if (pipe(curr->pipe_fd) == -1)
+		{
 			return (1);
+			perror("Erro ao criar pipe");
+		}
 		curr->pid = fork();
 		if (curr->pid == 0)
 		{
+			printf("Processo filho %d executando comando: %s\n", getpid(), curr->args[0]);
 			if (curr != path_list)
 				bind_stdin(curr);
 			if (curr->next)
