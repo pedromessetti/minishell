@@ -3,7 +3,8 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+      
+	+#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 12:43:36 by pmessett          #+#    #+#             */
 /*   Updated: 2023/06/30 08:29:24 by pmessett            ###   ########.fr       */
@@ -18,6 +19,22 @@ void	check_ac(int ac)
 		return ;
 	else
 		exit(EXIT_FAILURE);
+}
+
+int	create_env(char **envp)
+{
+	int	fd;
+	int	i;
+
+	fd = open(".env", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	i = 0;
+	while (envp[i])
+	{
+		ft_putendl_fd(envp[i], fd);
+		i++;
+	}
+	close(fd);
+	return (0);
 }
 
 // int	*check_fd(int fd[], char **av, int ac)
@@ -56,15 +73,13 @@ void	check_ac(int ac)
 // 	return (0);
 // }
 
-// void	check_exit_status(t_cmd_tb *path_list)
-// {
-// 	if (ft_str_is_num(path_list->args[1])
-// 		|| !path_list->args[1])
-// 		return ;
-// 	else
-// 		ft_printf("exit: %s: numeric argument required\n",
-// 			path_list->args[1]);
-// }
+void	check_exit_status(char *arg)
+{
+	if (ft_str_is_num(arg))
+		return ;
+	else
+		ft_printf("minishell: exit: %s: numeric argument required\n", arg);
+}
 
 // void	check_env(char **envp)
 // {
