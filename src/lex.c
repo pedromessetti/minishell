@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/06 10:59:28 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/09/07 12:58:51 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ int is_keyword(char *str, int len)
 	if (len == 4 && ft_strncmp(str, "echo", 4) == 0) 	
 		return (1);
 	if (len == 3 && ft_strncmp(str, "env", 3) == 0)
-		return (1);
-	if (len == 3 && ft_strncmp(str, "pwd", 3) == 0)
 		return (1);
 	return 0;
 }
@@ -151,8 +149,8 @@ void	lex(char *prompt, char **envp)
 	int token_count = 0;
 	int next_token_type = -1;
 	int echo_flag = 0;
-	t_token tokens[100]; // TODO: implement malloc
-	int prev_token_type = -1; // Initialize prev_token_type
+	t_token tokens[100];		 // TODO: implement malloc
+	int prev_token_type = -1; 	// Initialize prev_token_type
 
 	i = 0;
 	while (prompt[i])

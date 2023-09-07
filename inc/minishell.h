@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/30 22:07:50 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/09/07 12:58:36 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,14 @@ int is_literal_string(char *str, int len);
 int parse(t_token *tokens, int token_count, char **envp);
 int parse_ident_arg(t_token *tokens, int token_count, char **envp, int start, t_cmd_tb **cmd_list);
 int parse_key_literal(t_token *tokens, int token_count, char **envp, int start, t_cmd_tb **cmd_list);
+
 // /* --- Checker Functions --- */
 
 void				check_ac(int ac);
+int create_env(char **envp);
 // int					*check_fd(int fd[], char **av, int ac);
 // int					check_builtin(char *av);
-// void				check_exit_status(t_cmd_tb *path_list);
+void				check_exit_status(char *arg);
 // int					ask_for_exit_status(char **args);
 
 // /* --- Global Variable --- */
@@ -137,7 +139,7 @@ void				exec_cmd(t_cmd_tb *path_list, char **envp);
 
 // char				*ft_strip(char *str);
 // int					has_pipe(char *s);
-
+char	*ft_getenv(char *name);
 // char	*handle_variable(char *var, char **envp);
 
 #endif
