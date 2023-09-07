@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/28 15:31:08 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/06 17:34:47 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,14 +117,20 @@ void	init(char **envp)
 {
 	char	*prompt;
 
-	(void)envp;
+	create_env(envp);
 	while (1)
 	{
 		prompt = readline(WHITE "minishell> " RESET);
 		add_history(prompt);
-		if (ft_strncmp(prompt, "exit", ft_strlen(prompt)) == 0)
+		if (ft_strnstr(prompt, "exit", ft_strlen(prompt)))
 		{
-			free(prompt);
+			prompt = ft_strnstr(prompt, "exit", ft_strlen(prompt));
+			prompt += 4;
+			while (*prompt == ' ')
+				prompt++;
+			check_exit_status(prompt);
+			printf("exit\n");
+			// free(prompt);
 			exit(EXIT_SUCCESS);
 		}
 		lex(prompt, envp);
