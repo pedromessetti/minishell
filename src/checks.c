@@ -21,22 +21,6 @@ void	check_ac(int ac)
 		exit(EXIT_FAILURE);
 }
 
-int	create_env(char **envp)
-{
-	int	fd;
-	int	i;
-
-	fd = open(".env", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	i = 0;
-	while (envp[i])
-	{
-		ft_putendl_fd(envp[i], fd);
-		i++;
-	}
-	close(fd);
-	return (0);
-}
-
 // int	*check_fd(int fd[], char **av, int ac)
 // {
 // 	int	flags;

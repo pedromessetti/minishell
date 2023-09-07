@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 19:48:00 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/07 10:31:08 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/07 19:10:23 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,31 +24,6 @@ int	has_redirections(char *s)
 	if (ft_strnstr(s, "<", ft_strlen(s)) || ft_strnstr(s, ">", ft_strlen(s)))
 		return (1);
 	return (0);
-}
-
-char	*ft_getenv(char *name)
-{
-	int		fd;
-	char	*line;
-	char	*value = NULL;
-
-	fd = open(".env", O_RDONLY);
-	line = get_next_line(fd);
-	while (line)
-	{
-		if (ft_strncmp(line, name, ft_strlen(name)) == 0)
-		{
-			close(fd);
-			value = ft_strchr(line, '=');
-			value++;
-			value[ft_strlen(value) - 1] = '\0';  // Remove the new line at the end of value
-			return (value);
-		}
-		line = get_next_line(fd);
-		// free(line);
-	}
-	close(fd);
-	return (NULL);
 }
 
 char	*ft_strip(char *str)
