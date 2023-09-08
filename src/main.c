@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/08 00:41:35 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/08 12:59:19 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,7 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	check_ac(ac);
 	init(envp);
+	signal(SIGINT, signal_handler);
+    signal(SIGQUIT, SIG_IGN);
 	return (0);
 }

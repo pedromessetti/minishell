@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/08 00:33:32 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/08 13:11:32 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/uio.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <signal.h>
 
 /* --- Tokens --- */
 
@@ -57,6 +58,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd_tb;
+
 
 /* --- Lexical Analysis --- */
 
@@ -107,5 +109,12 @@ int					start_process(t_cmd_tb *cmd_tb);
 char				*ft_getenv(char *name);
 int					create_env(char **envp);
 char				**get_full_env(void);
+
+/* --- Signals --- */
+
+void	signal_handler(int sig);
+void 	rl_replace_line(const char *, int);
+int		rl_on_new_line(void);
+void	rl_redisplay(void);
 
 #endif
