@@ -6,7 +6,7 @@
 /*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/08 13:11:32 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/09/09 16:42:52 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,5 @@ char				**get_full_env(void);
 /* --- Signals --- */
 
 void	signal_handler(int sig);
-void 	rl_replace_line(const char *, int);
-int		rl_on_new_line(void);
-void	rl_redisplay(void);
 
 #endif
