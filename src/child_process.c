@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes_process.c                                    :+:      :+:    :+:   */
+/*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/08/30 16:11:07 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/08 00:02:40 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int		g_last_exit_status = 0;
-
-void	exec_cmd(t_cmd_tb *cmd_list, char **envp)
+void	exec_cmd(t_cmd_tb *cmd_list)
 {
-	if (cmd_list->path)
-		execve(cmd_list->path, cmd_list->args, envp);
+	if (cmd_list->cmd_path)
+		execve(cmd_list->cmd_path, cmd_list->args, get_full_env());
 	close(cmd_list->dup2_fd[0]);
 	close(cmd_list->dup2_fd[1]);
-	free_path_list(&cmd_list);
+	free_cmd_tb(&cmd_list);
 	exit(EXIT_FAILURE);
 }
 
@@ -65,38 +63,38 @@ int	ft_wait(t_cmd_tb *curr)
 		waitpid(curr->pid, &exit_status, 0);
 		curr = curr->next;
 	}
-	// g_last_exit_status = exit_status;
 	return (exit_status);
 }
 
-int	start_process(t_cmd_tb *path_list, char **envp)
+int	start_process(t_cmd_tb *cmd_tb)
 {
-	t_cmd_tb *curr;
-	
+	t_cmd_tb	*curr;
+	int			exit_status;
 
-	curr = path_list;
-
+	curr = cmd_tb;
 	while (curr)
 	{
 		if (pipe(curr->pipe_fd) == -1)
+		{
+			perror("Error creating pipe");
 			return (1);
+		}
 		curr->pid = fork();
 		if (curr->pid == 0)
 		{
-			if (curr != path_list)
+			if (curr != cmd_tb)
 				bind_stdin(curr);
 			if (curr->next)
 				bind_stdout(curr);
-			exec_cmd(curr, envp);
+			exec_cmd(curr);
 		}
-		if (curr != path_list)
+		if (curr != cmd_tb)
 			close(curr->prev->pipe_fd[0]);
 		close(curr->pipe_fd[1]);
 		curr = curr->next;
 	}
-	close_all_pipes(path_list);
-	curr = path_list;
-	int exit_status = ft_wait(curr);
-	// free_path_list(&path_list);
+	close_all_pipes(cmd_tb);
+	curr = cmd_tb;
+	exit_status = ft_wait(curr);
 	return (exit_status);
 }

@@ -6,19 +6,19 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 09:11:42 by pedro             #+#    #+#             */
-/*   Updated: 2023/07/11 09:11:46 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/07 23:19:45 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_str_isspace(char *s)
+int	ft_str_isspace(char *s)
 {
-    while (*s)
-    {
-        if (!ft_isspace(*s))
-            return (0);
-        s++;
-    }
-    return (1);
+	while (*s)
+	{
+		if (!ft_isspace(*s))
+			return (0);
+		s++;
+	}
+	return (1);
 }

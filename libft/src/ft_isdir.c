@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/29 22:16:54 by pmessett             #+#    #+#             */
-/*   Updated: 2023/07/03 09:24:08 by pmessett            ###   ########.fr       */
+/*   Created: 2023/09/07 23:22:00 by pedro             #+#    #+#             */
+/*   Updated: 2023/09/07 23:22:03 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_isdir(char *s)
 {
-    if ((ft_strncmp(s, "/", 1)) == 0 || (ft_strncmp(s, "./", 2)) == 0)
-        return (1);
-    return (0);
+	if ((ft_strncmp(s, "/", 1)) == 0 || (ft_strncmp(s, "./", 2)) == 0)
+		return (1);
+	return (0);
 }

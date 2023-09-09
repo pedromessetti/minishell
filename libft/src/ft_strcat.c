@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 12:00:39 by pedro             #+#    #+#             */
-/*   Updated: 2023/08/28 12:01:35 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/07 23:17:07 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 char	*ft_strcat(char *dest, const char *src)
 {
-	char *ptr = dest + ft_strlen(dest);
+	char	*ptr;
+
+	ptr = dest + ft_strlen(dest);
 	while (*src)
 		*ptr++ = *src++;
 	*ptr = '\0';

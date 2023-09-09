@@ -3,87 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/09 08:41:58 by pmessett             #+#    #+#             */
-/*   Updated: 2023/06/12 17:54:32 by pmessett            ###   ########.fr       */
+/*   Created: 2023/09/06 19:57:52 by pedro             #+#    #+#             */
+/*   Updated: 2023/09/07 23:37:45 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	find_i(char *saved)
+static size_t	gnl_strlen(const char *s)
 {
-	int	i;
+	size_t	i;
 
-	i = -1;
-	while (saved[++i])
-		if (saved[i] == '\n')
-			return (i);
-	return (0);
+	i = 0;
+	while (s && s[i] && s[i] != '\n')
+		i++;
+	return (++i);
 }
 
-static int	has_new_line(char *saved)
+static char	*gnl_strjoin(char *s1, char *s2)
 {
-	int	i;
+	char	*new_s;
+	size_t	i;
+	size_t	j;
 
-	i = -1;
-	while (saved[++i])
-		if (saved[i] == '\n')
-			return (1);
-	return (0);
-}
-
-static char	*return_line(char **saved)
-{
-	int		i;
-	char	*line;
-	char	*temp;
-
-	if (!*saved || **saved == '\0')
+	if (!s2[0])
+		return (0);
+	new_s = (char *)malloc((gnl_strlen(s1) + gnl_strlen(s2) + 1));
+	if (!new_s)
 		return (NULL);
-	i = find_i(*saved);
-	if (has_new_line(*saved))
+	i = 0;
+	j = 0;
+	while (s1 && s1[j])
+		new_s[i++] = s1[j++];
+	j = 0;
+	while (s2 && s2[j] != '\n' && s2[j])
+		new_s[i++] = s2[j++];
+	if (s2[j] == '\n')
+		new_s[i++] = '\n';
+	new_s[i] = '\0';
+	free(s1);
+	return (new_s);
+}
+
+static int	ft_clear(char *s)
+{
+	size_t	i;
+	size_t	j;
+	int		is_new_line;
+
+	i = 0;
+	j = 0;
+	is_new_line = 0;
+	while (s[i])
 	{
-		line = ft_substr(*saved, 0, i + 1);
-		temp = ft_substr(*saved, i + 1, ft_strlen(*saved));
-		free(*saved);
-		*saved = temp;
-		if (**saved != '\0')
-			return (line);
+		if (is_new_line)
+			s[j++] = s[i];
+		if (s[i] == '\n')
+			is_new_line = 1;
+		s[i++] = '\0';
 	}
-	else
-		line = ft_strdup(*saved);
-	free(*saved);
-	*saved = NULL;
-	return (line);
+	return (is_new_line);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buf;
-	static char	*saved[OPEN_MAX];
-	char		*temp;
-	int			ret;
+	static char	buf[BUFFER_SIZE + 1];
+	char		*line;
+	int			read_bytes;
 
-	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE < 1)
+	if (fd == -1 || BUFFER_SIZE < 1)
 		return (NULL);
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
-		return (NULL);
-	ret = read(fd, buf, BUFFER_SIZE);
-	while (ret > 0)
+	line = gnl_strjoin(0, buf);
+	if (ft_clear(buf))
+		return (line);
+	read_bytes = read(fd, buf, BUFFER_SIZE);
+	if (read_bytes < 0)
 	{
-		buf[ret] = '\0';
-		if (saved[fd] == NULL)
-			saved[fd] = ft_strdup("");
-		temp = ft_strjoin(saved[fd], buf);
-		free(saved[fd]);
-		saved[fd] = temp;
-		if (has_new_line(saved[fd]))
-			break ;
-		ret = read(fd, buf, BUFFER_SIZE);
+		free(line);
+		return (NULL);
 	}
-	free(buf);
-	return (return_line(&saved[fd]));
+	while (read_bytes)
+	{
+		line = gnl_strjoin(line, buf);
+		if (ft_clear(buf))
+			break ;
+		read_bytes = read(fd, buf, BUFFER_SIZE);
+	}
+	return (line);
 }
