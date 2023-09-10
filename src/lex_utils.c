@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 19:48:00 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/09 13:23:10 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/10 22:55:17 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,26 @@ int	is_redirection(char *str)
 	return (0);
 }
 
-void iter_tokens(t_token **tokens) {
-    t_token *token = *tokens;
-    while (token) {
-        if ((!token->prev || token->prev->type == TOKEN_OPERATOR) && token->type == TOKEN_ARG)
-            token->type = TOKEN_IDENTIFIER;
-        if (ft_strncmp(token->content, "grep", 4) == 0)
-            token->next->type = TOKEN_ARG;
+void	iter_tokens(t_token **tokens)
+{
+	t_token *token = *tokens;
+	while (token)
+	{
+		if ((!token->prev || token->prev->type == TOKEN_OPERATOR)
+			&& token->type == TOKEN_ARG)
+			token->type = TOKEN_IDENTIFIER;
+		if (token->prev && token->prev->type == TOKEN_IDENTIFIER
+			&& token->type == TOKEN_IDENTIFIER)
+		{
+			token->type = TOKEN_ARG;
+			while (token->next && token->next->type != TOKEN_OPERATOR)
+			{
+				token->next->type = TOKEN_ARG;
+				token = token->next;
+			}
+		}
+		if (ft_strncmp(token->content, "grep", 4) == 0)
+			token->next->type = TOKEN_ARG;
 		if (ft_strncmp(token->content, "echo", 4) == 0)
 		{
 			while (token->next && token->next->type != TOKEN_OPERATOR)
@@ -67,10 +80,20 @@ void iter_tokens(t_token **tokens) {
 				token = token->next;
 			}
 		}
-        if ((!token->prev || token->prev->type == TOKEN_OPERATOR) && token->type == TOKEN_LITERAL)
+		if (ft_strncmp(token->content, "export", 6) == 0
+			|| ft_strncmp(token->content, "unset", 5) == 0)
+		{
+			while (token->next && token->next->type != TOKEN_OPERATOR)
+			{
+				token->next->type = TOKEN_ARG;
+				token = token->next;
+			}
+		}
+		if ((!token->prev || token->prev->type == TOKEN_OPERATOR)
+			&& token->type == TOKEN_LITERAL)
 			token->type = TOKEN_IDENTIFIER;
-        if (is_redirection(token->content) && token->next)
-            token->next->type = TOKEN_FILE;
-        token = token->next;
-    }
+		if (is_redirection(token->content) && token->next)
+			token->next->type = TOKEN_FILE;
+		token = token->next;
+	}
 }
