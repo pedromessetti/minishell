@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 11:45:09 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/09 13:30:51 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/10 22:48:51 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	handle_literal(t_token **token, char *prompt, int *i)
 	(*i)++;
 }
 
-void	lex(char *prompt)
+void	lex(char *prompt, t_env **env)
 {
 	int		i;
 	int		start;
@@ -71,6 +71,6 @@ void	lex(char *prompt)
 	}
 	iter_tokens(&token);
 	// print_token_list(token);
-	parser(token);
+	parser(token, env);
 	free_tokens(&token);
 }

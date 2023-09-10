@@ -6,81 +6,96 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 14:59:24 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/08 16:30:11 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/10 22:42:57 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	create_env(char **envp)
+void	set_env(char *var, t_env **env)
 {
-	int	fd;
-	int	i;
+	char	*trimmed_var;
 
-	fd = open(".env", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	i = -1;
-	while (envp[++i])
-		ft_putendl_fd(envp[i], fd);
-	close(fd);
-	return (0);
+	trimmed_var = ft_strtrim(var, "'\"");
+	if (!*env)
+		*env = add_env_node(trimmed_var);
+	else if (ft_strchr(trimmed_var, '=') && ft_strlen(trimmed_var) > 1)
+		add_env_tail(env, add_env_node(trimmed_var));
+	else
+		ft_printf("minishell: export: `%s': not a valid identifier\n",
+			trimmed_var);
+	free(trimmed_var);
 }
 
-char	*ft_getenv(char *name)
+void	unset_env(char *var, t_env **env)
 {
-	int		fd;
-	char	*line;
+	t_env	*tmp;
+	t_env	*prev;
+
+	tmp = *env;
+	prev = NULL;
+	while (tmp)
+	{
+		if (ft_strncmp(tmp->content, var, ft_strlen(var)) == 0)
+		{
+			if (prev)
+				prev->next = tmp->next;
+			else
+				*env = tmp->next;
+			free(tmp->content);
+			free(tmp);
+			return ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
+char	*ft_getenv(char *name, t_env **env)
+{
 	char	*value;
+	t_env	*tmp;
 
 	value = NULL;
-	fd = open(".env", O_RDONLY);
-	line = get_next_line(fd);
-	while (line)
+	tmp = *env;
+	while (tmp)
 	{
-		if (ft_strncmp(line, name, ft_strlen(name)) == 0)
+		if (ft_strncmp(tmp->content, name, ft_strlen(name)) == 0)
 		{
-			close(fd);
-			value = ft_strchr(line, '=');
+			value = ft_strchr(tmp->content, '=');
 			value++;
-			value[ft_strlen(value) - 1] = '\0';
-			free(line);
+			value[ft_strlen(value)] = '\0';
 			return (value);
 		}
-		free(line);
-		line = get_next_line(fd);
+		tmp = tmp->next;
 	}
-	free(line);
-	close(fd);
 	return (NULL);
 }
 
-char	**get_full_env(void)
+char	**get_full_env(t_env **env)
 {
-	int		fd;
-	char	*line;
-	char	**env;
 	int		i;
+	char	**full_env;
+	t_env	*tmp;
 
-	fd = open(".env", O_RDONLY);
-	line = get_next_line(fd);
 	i = 0;
-	while (line)
+	tmp = *env;
+	while (tmp)
 	{
+		tmp = tmp->next;
 		i++;
-		line = get_next_line(fd);
 	}
-	close(fd);
-	env = malloc(sizeof(char *) * (i + 1));
-	fd = open(".env", O_RDONLY);
+	full_env = (char **)malloc(sizeof(char *) * (i + 1));
+	tmp = *env;
 	i = 0;
-	line = get_next_line(fd);
-	while (line)
+	if (!full_env)
+		return (NULL);
+	while (tmp)
 	{
-		env[i] = ft_strdup(line);
-		env[i][ft_strlen(env[i]) - 1] = '\0';
+		full_env[i] = tmp->content;
+		tmp = tmp->next;
 		i++;
-		line = get_next_line(fd);
 	}
-	env[i] = NULL;
-	close(fd);
-	return (env);
+	full_env[i] = NULL;
+	return (full_env);
 }

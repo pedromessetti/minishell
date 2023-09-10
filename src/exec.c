@@ -6,16 +6,16 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 00:27:54 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/09 13:36:01 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/10 10:28:15 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_cd(const char *directory)
+void	exec_cd(const char *directory, t_env **env)
 {
-	if (ft_strncmp(directory, "~/", 2) == 0)
-		chdir(ft_getenv("HOME"));
+	if (ft_strncmp(directory, "~/", 2) == 0 || ft_strcmp(directory, "~") == 0 || !*directory)
+		chdir(ft_getenv("HOME", env));
 	else
 	{
 		if (chdir(directory) != 0)
@@ -26,7 +26,7 @@ void	exec_cd(const char *directory)
 void exec_pwd(void)
 {
 	char *cdir = getcwd(NULL, 0);
-	printf("%s\n", cdir);
+	ft_putendl_fd(cdir, STDOUT_FILENO);
 	free(cdir);
 }
 
@@ -78,7 +78,7 @@ static char	**add_to_args(char **args, char *str)
 	return (new_args);
 }
 
-void	exec_identifier(t_token *token, t_cmd_tb **cmd_list)
+void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env)
 {
 	char	**args;
 	int		args_count;
@@ -93,7 +93,7 @@ void	exec_identifier(t_token *token, t_cmd_tb **cmd_list)
 		else
 			break ;
 	}
-	*cmd_list = choose_handle(args[0], *cmd_list, args);
+	*cmd_list = choose_handle(args[0], *cmd_list, args, env);
 	if (!*cmd_list)
 		free_matrix(args);
 }

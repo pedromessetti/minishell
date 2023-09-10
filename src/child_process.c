@@ -6,16 +6,16 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/08 00:02:40 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/09 19:39:57 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_cmd(t_cmd_tb *cmd_list)
+void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 {
 	if (cmd_list->cmd_path)
-		execve(cmd_list->cmd_path, cmd_list->args, get_full_env());
+		execve(cmd_list->cmd_path, cmd_list->args, get_full_env(env));
 	close(cmd_list->dup2_fd[0]);
 	close(cmd_list->dup2_fd[1]);
 	free_cmd_tb(&cmd_list);
@@ -66,7 +66,7 @@ int	ft_wait(t_cmd_tb *curr)
 	return (exit_status);
 }
 
-int	start_process(t_cmd_tb *cmd_tb)
+int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 {
 	t_cmd_tb	*curr;
 	int			exit_status;
@@ -86,7 +86,7 @@ int	start_process(t_cmd_tb *cmd_tb)
 				bind_stdin(curr);
 			if (curr->next)
 				bind_stdout(curr);
-			exec_cmd(curr);
+			exec_cmd(curr, env);
 		}
 		if (curr != cmd_tb)
 			close(curr->prev->pipe_fd[0]);
