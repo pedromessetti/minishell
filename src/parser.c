@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/09/10 22:38:45 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 10:53:20 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	parser(t_token *tokens, t_env **env)
 {
 	t_cmd_tb	*cmd_list;
+	int fd = STDOUT_FILENO;
 
 	cmd_list = NULL;
 	while (tokens)
@@ -36,15 +37,15 @@ int	parser(t_token *tokens, t_env **env)
 				exec_cd(tokens->content, env);
 		}
 		else if (ft_strcmp(tokens->content, "pwd") == 0)
-			exec_pwd();
+			exec_pwd(fd);
 		else if (ft_strcmp(tokens->content, "env") == 0)
-			print_env(env);
+			print_env(env, fd);
 		else if (ft_strcmp(tokens->content, "echo") == 0)
 		{
 			if (tokens->next && tokens->next->type == TOKEN_ARG)
-				exec_echo(tokens->next->content);
+				exec_echo(tokens->next->content, fd);
 			else
-				exec_echo(NULL);
+				exec_echo(NULL, fd);
 		}
 		else if (ft_strcmp(tokens->content, "unset") == 0)
 		{

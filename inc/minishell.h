@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/10 12:06:37 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 10:52:11 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct s_token
 /*I/O*/
 typedef struct s_io
 {
-	int				i_fd;
-	int				o_fd;
+	int				in;
+	int				out;
 }					t_io;
 
 /* Command Table */
@@ -114,10 +114,10 @@ void				print_list(t_cmd_tb *list);
 /* --- Executer --- */
 
 void				exec_cd(const char *directory, t_env **env);
-void				exec_echo(char *arg);
+void				exec_echo(char *arg, int fd);
 void				exec_identifier(t_token *token, t_cmd_tb **cmd_list,
 						t_env **env);
-void				exec_pwd(void);
+void				exec_pwd(int fd);
 
 /* --- Child Process --- */
 
@@ -129,7 +129,7 @@ char				*ft_getenv(char *name, t_env **env);
 char				**get_full_env(t_env **env);
 void				set_env(char *var, t_env **env);
 t_env				*create_env(t_env *env_list, char *envp);
-void				print_env(t_env **list);
+void				print_env(t_env **list, int fd);
 void				free_env(t_env **env_list);
 void				add_env_tail(t_env **list_head, t_env *new_path);
 t_env				*add_env_node(char *envp);

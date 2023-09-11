@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 00:27:54 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/10 10:28:15 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 10:51:58 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@ void	exec_cd(const char *directory, t_env **env)
 	}
 }
 
-void exec_pwd(void)
+void exec_pwd(int fd)
 {
 	char *cdir = getcwd(NULL, 0);
-	ft_putendl_fd(cdir, STDOUT_FILENO);
+	ft_putendl_fd(cdir, fd);
 	free(cdir);
 }
 
-void	exec_echo(char *arg)
+void	exec_echo(char *arg, int fd)
 {
 	if (arg)
-		ft_putendl_fd(arg, STDOUT_FILENO);
+		ft_putendl_fd(arg, fd);
 	else
-		ft_putendl_fd("", STDOUT_FILENO);
+		ft_putendl_fd("", fd);
 }
 
 void	exec_env(void)
