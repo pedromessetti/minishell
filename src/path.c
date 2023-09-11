@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 19:15:47 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/10 22:47:21 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 10:31:11 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,26 @@ t_cmd_tb	*find_path(t_cmd_tb *cmd_tb, char **possible_paths, char *cmd,
 	return (cmd_tb);
 }
 
-t_cmd_tb	*choose_handle(char *cmd, t_cmd_tb *cmd_list, char **args, t_env **env)
+t_cmd_tb	*choose_handle(char *cmd, t_cmd_tb *cmd_tb, char **args,
+		t_env **env)
 {
 	char	**possible_paths;
+	char	*tmp;
 
 	if (ft_isdir(cmd))
 	{
 		if (access(cmd, F_OK) == -1)
 			ft_printf("minishell: %s: No such file or directory\n", cmd);
-		cmd_list = set_cmd_tb(cmd_list, cmd, args);
+		tmp = ft_strdup(cmd);
+		cmd_tb = set_cmd_tb(cmd_tb, tmp, args);
 	}
 	else
 	{
 		possible_paths = set_possible_paths(env);
-		cmd_list = find_path(cmd_list, possible_paths, cmd, args);
+		if (!possible_paths)
+			return (NULL);
+		cmd_tb = find_path(cmd_tb, possible_paths, cmd, args);
 		free_matrix(possible_paths);
 	}
-	return (cmd_list);
+	return (cmd_tb);
 }
