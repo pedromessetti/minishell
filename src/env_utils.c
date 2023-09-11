@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 19:02:51 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/10 11:03:37 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 10:52:20 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,6 @@ void	free_env(t_env **env_list)
 	tmp = NULL;
 	if (!*env_list)
 		return ;
-	while ((*env_list)->prev)
-		*env_list = (*env_list)->prev;
 	while (*env_list)
 	{
 		tmp = (*env_list)->next;
@@ -90,7 +88,7 @@ void	free_env(t_env **env_list)
 }
 
 /*Print env*/
-void	print_env(t_env **list)
+void	print_env(t_env **list, int fd)
 {
 	t_env	*tmp;
 	tmp = *list;
@@ -98,7 +96,7 @@ void	print_env(t_env **list)
         return ;
     while (tmp)
     {
-        ft_putendl_fd(tmp->content, STDOUT_FILENO);
+        ft_putendl_fd(tmp->content, fd);
         tmp = tmp->next;
     }
 }
