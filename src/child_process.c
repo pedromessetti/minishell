@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/09 19:39:57 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/12 05:01:14 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,49 @@
 void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 {
 	if (cmd_list->cmd_path)
+	{
+		if (cmd_list->io.in != STDIN_FILENO)
+		{
+			cmd_list->dup2_fd[0] = dup2(cmd_list->io.in, STDIN_FILENO);
+			close(cmd_list->io.in);
+		}
+		if (cmd_list->io.out != STDOUT_FILENO)
+		{
+			cmd_list->dup2_fd[1] = dup2(cmd_list->io.out, STDOUT_FILENO);
+			close(cmd_list->io.out);
+		}
 		execve(cmd_list->cmd_path, cmd_list->args, get_full_env(env));
-	close(cmd_list->dup2_fd[0]);
-	close(cmd_list->dup2_fd[1]);
+		close(cmd_list->dup2_fd[0]);
+		close(cmd_list->dup2_fd[1]);
+	}
 	free_cmd_tb(&cmd_list);
 	exit(EXIT_FAILURE);
 }
 
 void	bind_stdin(t_cmd_tb *curr)
 {
+	if (curr->io.in != -1 && curr->io.in != STDIN_FILENO)
+	{
+		close(curr->pipe_fd[0]);
+		return ;
+	}
+	
 	if (curr->prev)
-		curr->dup2_fd[0] = dup2(curr->prev->pipe_fd[0], STDIN_FILENO);
-	else
-		curr->dup2_fd[0] = dup2(curr->pipe_fd[0], STDIN_FILENO);
+		curr->io.in = curr->prev->pipe_fd[0];
 	close(curr->pipe_fd[0]);
 }
 
 void	bind_stdout(t_cmd_tb *curr)
 {
+	if (curr->io.out != -1 && curr->io.out != STDOUT_FILENO)
+	{
+		close(curr->pipe_fd[1]);
+		return ;
+	}
 	if (curr->next)
-		curr->dup2_fd[1] = dup2(curr->pipe_fd[1], STDOUT_FILENO);
+		curr->io.out = curr->pipe_fd[1];
 	else
-		curr->dup2_fd[1] = dup2(curr->dup2_fd[1], STDOUT_FILENO);
-	close(curr->pipe_fd[1]);
+		close(curr->pipe_fd[1]);
 }
 
 void	close_all_pipes(t_cmd_tb *list)
@@ -82,10 +102,8 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 		curr->pid = fork();
 		if (curr->pid == 0)
 		{
-			if (curr != cmd_tb)
-				bind_stdin(curr);
-			if (curr->next)
-				bind_stdout(curr);
+			bind_stdin(curr);
+			bind_stdout(curr);
 			exec_cmd(curr, env);
 		}
 		if (curr != cmd_tb)

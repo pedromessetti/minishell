@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/11 10:52:11 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 20:54:13 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ t_cmd_tb			*choose_handle(char *cmd, t_cmd_tb *list, char **args,
 
 /* --- Command Table Functions --- */
 
+t_cmd_tb			*find_cmd_tb_tail(t_cmd_tb *cmd_tb);
 t_cmd_tb			*set_cmd_tb(t_cmd_tb *cmd_tb, char *cmd_path, char **args);
 void				free_cmd_tb(t_cmd_tb **cmd_tb);
 void				print_list(t_cmd_tb *list);
@@ -116,7 +117,7 @@ void				print_list(t_cmd_tb *list);
 void				exec_cd(const char *directory, t_env **env);
 void				exec_echo(char *arg, int fd);
 void				exec_identifier(t_token *token, t_cmd_tb **cmd_list,
-						t_env **env);
+						t_env **env, t_io *io);
 void				exec_pwd(int fd);
 
 /* --- Child Process --- */

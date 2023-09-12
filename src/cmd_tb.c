@@ -6,28 +6,18 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 19:30:36 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/08 16:37:37 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/12 05:10:27 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*Iterates into the cmd_tb and returns his last node*/
-static t_cmd_tb	*find_last(t_cmd_tb *cmd_tb)
-{
-	if (!cmd_tb)
-		return (NULL);
-	while (cmd_tb->next)
-		cmd_tb = cmd_tb->next;
-	return (cmd_tb);
-}
 
 /*Add a new node at the end of the cmd_tb*/
 static void	add_tail(t_cmd_tb **head, t_cmd_tb *new_node)
 {
 	t_cmd_tb	*last;
 
-	last = find_last(*head);
+	last = find_cmd_tb_tail(*head);
 	if (!head)
 		return ;
 	if (!*head)
@@ -52,6 +42,16 @@ static t_cmd_tb	*add_node(char *cmd_path, char **args)
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
+}
+
+/*Iterates into the cmd_tb and returns his last node*/
+t_cmd_tb	*find_cmd_tb_tail(t_cmd_tb *cmd_tb)
+{
+	if (!cmd_tb)
+		return (NULL);
+	while (cmd_tb->next)
+		cmd_tb = cmd_tb->next;
+	return (cmd_tb);
 }
 
 /*If the command table is empty add the node at the head,

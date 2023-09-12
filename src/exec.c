@@ -6,7 +6,7 @@
 /*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 00:27:54 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/11 10:51:58 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/11 19:13:31 by pedro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	exec_cd(const char *directory, t_env **env)
 {
-	if (ft_strncmp(directory, "~/", 2) == 0 || ft_strcmp(directory, "~") == 0 || !*directory)
+	if (ft_strncmp(directory, "~/", 2) == 0 || ft_strcmp(directory, "~") == 0
+		|| !*directory)
 		chdir(ft_getenv("HOME", env));
 	else
 	{
@@ -23,9 +24,11 @@ void	exec_cd(const char *directory, t_env **env)
 	}
 }
 
-void exec_pwd(int fd)
+void	exec_pwd(int fd)
 {
-	char *cdir = getcwd(NULL, 0);
+	char	*cdir;
+
+	cdir = getcwd(NULL, 0);
 	ft_putendl_fd(cdir, fd);
 	free(cdir);
 }
@@ -36,22 +39,6 @@ void	exec_echo(char *arg, int fd)
 		ft_putendl_fd(arg, fd);
 	else
 		ft_putendl_fd("", fd);
-}
-
-void	exec_env(void)
-{
-	int		fd;
-	char	*line;
-
-	fd = open(".env", O_RDONLY);
-	line = get_next_line(fd);
-	while (line)
-	{
-		printf("%s", line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
 }
 
 static char	**add_to_args(char **args, char *str)
@@ -78,11 +65,14 @@ static char	**add_to_args(char **args, char *str)
 	return (new_args);
 }
 
-void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env)
+void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env, t_io* io)
 {
-	char	**args;
-	int		args_count;
+	char		**args;
+	int			args_count;
+	t_io		*cmd_io;
+	t_cmd_tb	*tmp;
 
+	args = NULL;
 	args_count = 1;
 	while (token && token->type != TOKEN_OPERATOR)
 	{
@@ -94,6 +84,19 @@ void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env)
 			break ;
 	}
 	*cmd_list = choose_handle(args[0], *cmd_list, args, env);
+	tmp = find_cmd_tb_tail(*cmd_list);
 	if (!*cmd_list)
+	{
 		free_matrix(args);
+		return ;
+	}
+	cmd_io = &tmp->io;
+	*cmd_io = *io;
+	io->in = -1;
+	io->out = -1;
+	if (cmd_io->in == -1)
+		cmd_io->in = STDIN_FILENO;
+	if (cmd_io->out == -1)
+		cmd_io->out = STDOUT_FILENO;
+		
 }
