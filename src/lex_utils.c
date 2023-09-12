@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/06 19:48:00 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/10 22:55:17 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:48:44 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 13:48:46 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	is_literal_string(char *str, int len)
 	if (len < 2)
 		return (0);
 	if ((str[0] == '"' || str[len - 1] == '"') || (str[0] == '\'' || str[len
-			- 1] == '\''))
+				- 1] == '\''))
 		return (1);
 	return (0);
 }
@@ -54,7 +54,9 @@ int	is_redirection(char *str)
 
 void	iter_tokens(t_token **tokens)
 {
-	t_token *token = *tokens;
+	t_token	*token;
+
+	token = *tokens;
 	while (token)
 	{
 		if ((!token->prev || token->prev->type == TOKEN_OPERATOR)
@@ -71,7 +73,13 @@ void	iter_tokens(t_token **tokens)
 			}
 		}
 		if (ft_strncmp(token->content, "grep", 4) == 0)
-			token->next->type = TOKEN_ARG;
+		{
+			while (token->next && token->next->type != TOKEN_OPERATOR)
+			{
+				token->next->type = TOKEN_ARG;
+				token = token->next;
+			}
+		}
 		if (ft_strncmp(token->content, "echo", 4) == 0)
 		{
 			while (token->next && token->next->type != TOKEN_OPERATOR)
@@ -82,6 +90,14 @@ void	iter_tokens(t_token **tokens)
 		}
 		if (ft_strncmp(token->content, "export", 6) == 0
 			|| ft_strncmp(token->content, "unset", 5) == 0)
+		{
+			while (token->next && token->next->type != TOKEN_OPERATOR)
+			{
+				token->next->type = TOKEN_ARG;
+				token = token->next;
+			}
+		}
+		if (ft_strncmp(token->content, "cd", 2) == 0)
 		{
 			while (token->next && token->next->type != TOKEN_OPERATOR)
 			{
