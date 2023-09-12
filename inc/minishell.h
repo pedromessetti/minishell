@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/25 20:17:43 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/11 20:54:13 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:50:07 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 13:50:11 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void				print_list(t_cmd_tb *list);
 /* --- Executer --- */
 
 void				exec_cd(const char *directory, t_env **env);
-void				exec_echo(char *arg, int fd);
+void				exec_echo(char *arg, int fd, t_env **env);
 void				exec_identifier(t_token *token, t_cmd_tb **cmd_list,
 						t_env **env, t_io *io);
 void				exec_pwd(int fd);
@@ -123,6 +123,8 @@ void				exec_pwd(int fd);
 /* --- Child Process --- */
 
 int					start_process(t_cmd_tb *cmd_tb, t_env **env);
+void				bind_stdin(t_cmd_tb *curr);
+void				bind_stdout(t_cmd_tb *curr);
 
 /* --- Environment --- */
 
