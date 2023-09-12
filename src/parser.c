@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/09/11 20:41:15 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/12 13:46:23 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,18 @@ int	parser(t_token *tokens, t_env **env)
 		if (ft_strcmp(tokens->content, "cd") == 0)
 		{
 			tokens = tokens->next;
-			if (tokens && ft_strcmp(tokens->content, "|") == 0)
+			if ((tokens && ft_strcmp(tokens->content, "|") == 0)
+				|| (tokens->next && ft_strcmp(tokens->next->content, "|") == 0))
 			{
 				tokens = tokens->next;
+				continue ;
+			}
+			else if (tokens && tokens->type == TOKEN_ARG && tokens->next
+				&& tokens->next->type == TOKEN_ARG)
+			{
+				ft_printf("minishell: cd: too many arguments\n");
+				while (tokens && tokens->type == TOKEN_ARG)
+					tokens = tokens->next;
 				continue ;
 			}
 			else if (!tokens)
@@ -45,10 +54,14 @@ int	parser(t_token *tokens, t_env **env)
 			print_env(env, STDOUT_FILENO);
 		else if (ft_strcmp(tokens->content, "echo") == 0)
 		{
-			if (tokens->next && tokens->next->type == TOKEN_ARG)
-				exec_echo(tokens->next->content, STDOUT_FILENO);
-			else
-				exec_echo(NULL, cmd_list->io.out);
+			if (!tokens->next)
+				exec_echo(NULL, STDOUT_FILENO, env);
+			while (tokens->next && tokens->next->type == TOKEN_ARG)
+			{
+				// TODO: Join all the arguments before sending to exec_echo
+				exec_echo(tokens->next->content, STDOUT_FILENO, env);
+				tokens = tokens->next;
+			}
 		}
 		else if (ft_strcmp(tokens->content, "unset") == 0)
 		{

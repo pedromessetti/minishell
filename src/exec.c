@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/08 00:27:54 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/11 19:13:31 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:49:33 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 13:49:34 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,18 @@ void	exec_pwd(int fd)
 	free(cdir);
 }
 
-void	exec_echo(char *arg, int fd)
+void	exec_echo(char *arg, int fd, t_env **env)
 {
-	if (arg)
+	if (arg && arg[0] == '$')
+	{
+		if (ft_getenv(arg, env))
+			ft_putendl_fd(ft_getenv(arg, env), fd);
+		else
+			ft_putendl_fd("", fd);
+	}
+	else if (arg)
 		ft_putendl_fd(arg, fd);
-	else
+	else if (!arg)
 		ft_putendl_fd("", fd);
 }
 
@@ -65,7 +72,8 @@ static char	**add_to_args(char **args, char *str)
 	return (new_args);
 }
 
-void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env, t_io* io)
+void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env,
+		t_io *io)
 {
 	char		**args;
 	int			args_count;
@@ -98,5 +106,4 @@ void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env, t_io* io)
 		cmd_io->in = STDIN_FILENO;
 	if (cmd_io->out == -1)
 		cmd_io->out = STDOUT_FILENO;
-		
 }
