@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/11 09:11:30 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/09 21:28:58 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:49:52 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 13:49:53 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,14 @@ void	init(t_env **env)
 int	main(int ac, char **av, char **envp)
 {
 	t_env	*env;
+	int		i;
 
 	env = NULL;
 	(void)av;
 	check_ac(ac);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
-	int i = -1;
+	i = -1;
 	while (envp[++i])
 		env = create_env(env, envp[i]);
 	init(&env);

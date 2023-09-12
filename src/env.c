@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/07 14:59:24 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/10 22:42:57 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:50:01 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 13:50:03 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ char	*ft_getenv(char *name, t_env **env)
 
 	value = NULL;
 	tmp = *env;
+	if (name[0] == '$')
+		name++;
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->content, name, ft_strlen(name)) == 0)
@@ -98,4 +100,19 @@ char	**get_full_env(t_env **env)
 	}
 	full_env[i] = NULL;
 	return (full_env);
+}
+
+/*Print env*/
+void	print_env(t_env **list, int fd)
+{
+	t_env	*tmp;
+
+	tmp = *list;
+	if (!tmp)
+		return ;
+	while (tmp)
+	{
+		ft_putendl_fd(tmp->content, fd);
+		tmp = tmp->next;
+	}
 }

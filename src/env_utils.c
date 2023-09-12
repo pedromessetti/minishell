@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/09 19:02:51 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/11 10:52:20 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:49:09 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 13:49:11 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,22 +81,8 @@ void	free_env(t_env **env_list)
 	while (*env_list)
 	{
 		tmp = (*env_list)->next;
-        free((*env_list)->content);
+		free((*env_list)->content);
 		free(*env_list);
 		*env_list = tmp;
 	}
-}
-
-/*Print env*/
-void	print_env(t_env **list, int fd)
-{
-	t_env	*tmp;
-	tmp = *list;
-    if (!tmp)
-        return ;
-    while (tmp)
-    {
-        ft_putendl_fd(tmp->content, fd);
-        tmp = tmp->next;
-    }
 }

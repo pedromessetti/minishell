@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 05:01:14 by pedro            ###   ########.fr       */
+/*   Updated: 2023/09/12 13:42:07 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,6 @@ void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 	}
 	free_cmd_tb(&cmd_list);
 	exit(EXIT_FAILURE);
-}
-
-void	bind_stdin(t_cmd_tb *curr)
-{
-	if (curr->io.in != -1 && curr->io.in != STDIN_FILENO)
-	{
-		close(curr->pipe_fd[0]);
-		return ;
-	}
-	
-	if (curr->prev)
-		curr->io.in = curr->prev->pipe_fd[0];
-	close(curr->pipe_fd[0]);
-}
-
-void	bind_stdout(t_cmd_tb *curr)
-{
-	if (curr->io.out != -1 && curr->io.out != STDOUT_FILENO)
-	{
-		close(curr->pipe_fd[1]);
-		return ;
-	}
-	if (curr->next)
-		curr->io.out = curr->pipe_fd[1];
-	else
-		close(curr->pipe_fd[1]);
 }
 
 void	close_all_pipes(t_cmd_tb *list)
