@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:07 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:50:11 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/12 18:20:59 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@
 # define TOKEN_ARG 4
 # define TOKEN_KEYWORD 5
 # define TOKEN_FILE 6
+# define PARSER_REDIR_IN 7
+# define PARSER_REDIR_OUT 8
+# define PARSER_REDIR_APPEND 9
+# define PARSER_REDIR_HERE_DOC 10
 
 /* Token List */
 typedef struct s_token
@@ -63,6 +67,7 @@ typedef struct s_cmd
 	int				pipe_fd[2];
 	int				dup2_fd[2];
 	t_io			io;
+	t_token			*redirs;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd_tb;
@@ -88,10 +93,14 @@ t_token				*set_token(t_token *tokens, int type, char *str, int len);
 void				free_tokens(t_token **token_list);
 void				print_token_list(t_token *token_list);
 void				iter_tokens(t_token **tokens);
+void				add_token_to_tail(t_token **head, t_token *new_node);
+t_token*			duplicate_token(t_token *token);
+
+
 
 /* --- Parsing --- */
 
-int					parser(t_token *tokens, t_env **env);
+void					parser(t_token *tokens, t_env **env);
 
 /* --- Checkers --- */
 
@@ -117,7 +126,7 @@ void				print_list(t_cmd_tb *list);
 void				exec_cd(const char *directory, t_env **env);
 void				exec_echo(char *arg, int fd, t_env **env);
 void				exec_identifier(t_token *token, t_cmd_tb **cmd_list,
-						t_env **env, t_io *io);
+						t_env **env, t_token *redirs);
 void				exec_pwd(int fd);
 
 /* --- Child Process --- */
@@ -125,6 +134,11 @@ void				exec_pwd(int fd);
 int					start_process(t_cmd_tb *cmd_tb, t_env **env);
 void				bind_stdin(t_cmd_tb *curr);
 void				bind_stdout(t_cmd_tb *curr);
+void				bind_redirs(t_cmd_tb *curr);
+int					bind_redir_in(t_cmd_tb *cmd, t_token *redir);
+int					bind_redir_out(t_cmd_tb *cmd, t_token *redir);
+int					bind_redir_append(t_cmd_tb *cmd, t_token *redir);
+int					bind_redir_here_doc(t_cmd_tb *cmd, t_token *redir);
 
 /* --- Environment --- */
 
@@ -141,5 +155,8 @@ void				unset_env(char *var, t_env **env);
 /* --- Signals --- */
 
 void				signal_handler(int sig);
+
+
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:49:33 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:49:34 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/13 10:45:08 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ void	exec_cd(const char *directory, t_env **env)
 {
 	if (ft_strncmp(directory, "~/", 2) == 0 || ft_strcmp(directory, "~") == 0
 		|| !*directory)
+	{
 		chdir(ft_getenv("HOME", env));
+	}
 	else
 	{
 		if (chdir(directory) != 0)
@@ -73,11 +75,10 @@ static char	**add_to_args(char **args, char *str)
 }
 
 void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env,
-		t_io *io)
+		t_token *redirs)
 {
 	char		**args;
 	int			args_count;
-	t_io		*cmd_io;
 	t_cmd_tb	*tmp;
 
 	args = NULL;
@@ -92,18 +93,19 @@ void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env,
 			break ;
 	}
 	*cmd_list = choose_handle(args[0], *cmd_list, args, env);
-	tmp = find_cmd_tb_tail(*cmd_list);
 	if (!*cmd_list)
 	{
 		free_matrix(args);
 		return ;
 	}
-	cmd_io = &tmp->io;
-	*cmd_io = *io;
-	io->in = -1;
-	io->out = -1;
-	if (cmd_io->in == -1)
-		cmd_io->in = STDIN_FILENO;
-	if (cmd_io->out == -1)
-		cmd_io->out = STDOUT_FILENO;
+	tmp = find_cmd_tb_tail(*cmd_list);
+	tmp->redirs = redirs;
+	// cmd_io = &tmp->io;
+	// *cmd_io = *io;
+	// io->in = -1;
+	// io->out = -1;
+	// if (cmd_io->in == -1)
+	// 	cmd_io->in = STDIN_FILENO;
+	// if (cmd_io->out == -1)
+	// 	cmd_io->out = STDOUT_FILENO;
 }

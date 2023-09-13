@@ -6,26 +6,32 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/09/12 13:46:23 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/13 10:45:03 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parser(t_token *tokens, t_env **env)
+void	parser(t_token *tokens, t_env **env)
 {
 	t_cmd_tb	*cmd_list;
-	t_io		io;
-	t_io		*cmd_io;
+	t_cmd_tb	*head;
+	t_token		*redir_head;
+	t_token		**redir_tmp;
 
 	cmd_list = NULL;
-	io.in = -1;
-	io.out = -1;
+	head = NULL;
+	redir_head = NULL;
 	while (tokens)
 	{
 		if (ft_strcmp(tokens->content, "cd") == 0)
 		{
 			tokens = tokens->next;
+			if (!tokens)
+			{
+				exec_cd(ft_getenv("HOME", env), env);
+				break ;
+			}
 			if ((tokens && ft_strcmp(tokens->content, "|") == 0)
 				|| (tokens->next && ft_strcmp(tokens->next->content, "|") == 0))
 			{
@@ -39,11 +45,6 @@ int	parser(t_token *tokens, t_env **env)
 				while (tokens && tokens->type == TOKEN_ARG)
 					tokens = tokens->next;
 				continue ;
-			}
-			else if (!tokens)
-			{
-				exec_cd(ft_getenv("HOME", env), env);
-				break ;
 			}
 			else
 				exec_cd(tokens->content, env);
@@ -80,56 +81,49 @@ int	parser(t_token *tokens, t_env **env)
 			}
 		}
 		else if (tokens->type == TOKEN_IDENTIFIER)
-			exec_identifier(tokens, &cmd_list, env, &io);
+		{
+			exec_identifier(tokens, &head, env, redir_head);
+			cmd_list = find_cmd_tb_tail(head);
+		}
 		else if (ft_strcmp(tokens->content, "|") == 0)
 		{
-			if (!tokens->next)
+			if (!tokens->next && !cmd_list)
 			{
 				ft_printf("minishell: syntax error near unexpected token `|'\n");
 				free_cmd_tb(&cmd_list);
-				return (-1);
+				free_tokens(&tokens);
+				return ;
 			}
+			cmd_list = NULL;
+			redir_head = NULL;
 			tokens = tokens->next;
 			continue ;
 		}
 		else if (is_redirection(tokens->content))
 		{
-			cmd_io = &io;
-			if (cmd_list)
-				cmd_io = &cmd_list->io;
+			
 			if (!tokens->next)
 			{
 				ft_printf("minishell: syntax error near unexpected token `newline'\n");
 				free_cmd_tb(&cmd_list);
-				return (-1);
+				return ;
 			}
+			redir_tmp = &redir_head;
+			if (cmd_list)
+				redir_tmp = &cmd_list->redirs;
+			if (ft_strcmp(tokens->content, ">>") == 0)
+				tokens->next->type = PARSER_REDIR_APPEND;
+			else if (ft_strcmp(tokens->content, "<<") == 0)
+				tokens->next->type = PARSER_REDIR_HERE_DOC;
 			else if (ft_strcmp(tokens->content, ">") == 0)
-			{
-				cmd_io->out = open(tokens->next->content,
-						O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (cmd_io->out == -1)
-					ft_printf("minishell: %s: %s\n", tokens->next->content,
-						strerror(errno));
-			}
-			else if (ft_strcmp(tokens->content, ">>") == 0)
-			{
-				cmd_io->out = open(tokens->next->content,
-						O_WRONLY | O_CREAT | O_APPEND, 0644);
-				if (cmd_io->out == -1)
-					ft_printf("minishell: %s: %s\n", tokens->next->content,
-						strerror(errno));
-			}
+				tokens->next->type = PARSER_REDIR_OUT;
 			else if (ft_strcmp(tokens->content, "<") == 0)
-			{
-				cmd_io->in = open(tokens->next->content, O_RDONLY);
-				if (cmd_io->in == -1)
-					ft_printf("minishell: %s: %s\n", tokens->next->content,
-						strerror(errno));
-			}
+				tokens->next->type = PARSER_REDIR_IN;
+			add_token_to_tail(redir_tmp, duplicate_token(tokens->next));
 		}
 		tokens = tokens->next;
 	}
-	start_process(cmd_list, env);
-	free_cmd_tb(&cmd_list);
-	return (0);
+	// print_list(head);
+	start_process(head, env);
+	free_cmd_tb(&head);
 }

@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:48:44 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:48:46 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/12 18:08:39 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	is_redirection(char *str)
 	if (ft_strncmp(str, ">>", 2) == 0)
 		return (1);
 	if (ft_strncmp(str, "<", 1) == 0)
+		return (1);
+	if (ft_strncmp(str, "<<", 2) == 0)
 		return (1);
 	return (0);
 }

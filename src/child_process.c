@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:42:07 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/12 18:10:46 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 		curr->pid = fork();
 		if (curr->pid == 0)
 		{
+			bind_redirs(curr);
 			bind_stdin(curr);
 			bind_stdout(curr);
 			exec_cmd(curr, env);

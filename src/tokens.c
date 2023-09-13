@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pedro <pedro@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/07 19:41:07 by pedro             #+#    #+#             */
-/*   Updated: 2023/09/08 00:46:17 by pedro            ###   ########.fr       */
+/*   Created: 2023/09/12 13:48:24 by pmessett          #+#    #+#             */
+/*   Updated: 2023/09/12 20:34:47 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ static t_token	*find_last(t_token *token_list)
 }
 
 /*Add a new node at the end of the token list*/
-static void	add_tail(t_token **head, t_token *new_node)
+void	add_token_to_tail(t_token **head, t_token *new_node)
 {
 	t_token	*last;
 
+	if (!new_node)
+		return ;
 	last = find_last(*head);
 	if (!head)
 		return ;
@@ -66,7 +68,7 @@ t_token	*set_token(t_token *tokens, int type, char *str, int len)
 	else
 	{
 		tmp = add_node(type, str, len);
-		add_tail(&tokens, tmp);
+		add_token_to_tail(&tokens, tmp);
 	}
 	return (tokens);
 }
@@ -104,4 +106,18 @@ void	print_token_list(t_token *token_list)
 			token_list->type);
 		token_list = token_list->next;
 	}
+}
+
+t_token*	duplicate_token(t_token *token)
+{
+	t_token *new_token;
+
+	new_token = (t_token *)malloc(sizeof(t_token));
+	if (!new_token)
+		return (NULL);
+	new_token->content = ft_strdup(token->content);
+	new_token->type = token->type;
+	new_token->next = NULL;
+	new_token->prev = NULL;
+	return (new_token);
 }
