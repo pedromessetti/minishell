@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/09/13 10:45:03 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/14 11:41:37 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	parser(t_token *tokens, t_env **env)
 	t_cmd_tb	*head;
 	t_token		*redir_head;
 	t_token		**redir_tmp;
+	int			cmd_chain;
+	t_token		*curr;
+	t_token		*dup_token;
 
+	cmd_chain = 0;
 	cmd_list = NULL;
 	head = NULL;
 	redir_head = NULL;
@@ -66,17 +70,33 @@ void	parser(t_token *tokens, t_env **env)
 		}
 		else if (ft_strcmp(tokens->content, "unset") == 0)
 		{
+			curr = tokens;
+			while (curr->next && curr->type != TOKEN_OPERATOR)
+			{
+				if (ft_strcmp(curr->next->content, "|") == 0)
+					cmd_chain = 1;
+				curr = curr->next;
+			}
 			while (tokens->next && tokens->next->type == TOKEN_ARG)
 			{
-				unset_env(tokens->next->content, env);
+				if (cmd_chain == 0)
+					unset_env(tokens->next->content, env);
 				tokens = tokens->next;
 			}
 		}
 		else if (ft_strcmp(tokens->content, "export") == 0)
 		{
+			curr = tokens;
+			while (curr->next && curr->type != TOKEN_OPERATOR)
+			{
+				if (ft_strcmp(curr->next->content, "|") == 0)
+					cmd_chain = 1;
+				curr = curr->next;
+			}
 			while (tokens->next && tokens->next->type == TOKEN_ARG)
 			{
-				set_env(tokens->next->content, env);
+				if (cmd_chain == 0)
+					set_env(tokens->next->content, env);
 				tokens = tokens->next;
 			}
 		}
@@ -101,7 +121,6 @@ void	parser(t_token *tokens, t_env **env)
 		}
 		else if (is_redirection(tokens->content))
 		{
-			
 			if (!tokens->next)
 			{
 				ft_printf("minishell: syntax error near unexpected token `newline'\n");
@@ -119,11 +138,14 @@ void	parser(t_token *tokens, t_env **env)
 				tokens->next->type = PARSER_REDIR_OUT;
 			else if (ft_strcmp(tokens->content, "<") == 0)
 				tokens->next->type = PARSER_REDIR_IN;
-			add_token_to_tail(redir_tmp, duplicate_token(tokens->next));
+			dup_token = duplicate_token(tokens->next);
+			add_token_to_tail(redir_tmp, dup_token);
 		}
 		tokens = tokens->next;
 	}
 	// print_list(head);
 	start_process(head, env);
+	// if (dup_token)
+	// 	free(dup_token->content);
 	free_cmd_tb(&head);
 }
