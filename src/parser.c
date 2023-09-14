@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/09/14 11:41:37 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/14 13:25:30 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,14 @@ void	parser(t_token *tokens, t_env **env)
 				exec_cd(tokens->content, env);
 		}
 		else if (ft_strcmp(tokens->content, "pwd") == 0)
-			exec_pwd(STDOUT_FILENO);
+		{
+			if (tokens->next && tokens->next->type == TOKEN_ARG)
+				ft_printf("minishell: pwd: %s: invalid option\n", tokens->next->content);
+			else
+				exec_pwd(STDOUT_FILENO);
+			while (tokens->next && (tokens->next->type == TOKEN_IDENTIFIER || tokens->next->type == TOKEN_ARG))
+				tokens = tokens->next;
+		}
 		else if (ft_strcmp(tokens->content, "env") == 0)
 			print_env(env, STDOUT_FILENO);
 		else if (ft_strcmp(tokens->content, "echo") == 0)
