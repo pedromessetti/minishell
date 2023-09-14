@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:49:33 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/13 10:45:08 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/14 11:41:42 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ void	exec_cd(const char *directory, t_env **env)
 		if (chdir(directory) != 0)
 			perror("minishell: cd");
 	}
+	char *cdir = getcwd(NULL,0);
+	char *tmp = ft_strjoin("PWD=", cdir);
+	set_env(tmp, env);
+	free(tmp);
+	free(cdir);
 }
 
 void	exec_pwd(int fd)
