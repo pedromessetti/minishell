@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:01 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:50:03 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/14 11:25:03 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,23 @@
 void	set_env(char *var, t_env **env)
 {
 	char	*trimmed_var;
-
 	trimmed_var = ft_strtrim(var, "'\"");
+	char *tmp_var = ft_substr(trimmed_var, 0, ft_strlen(trimmed_var)-ft_strlen(ft_strchr(trimmed_var, '=')));
 	if (!*env)
 		*env = add_env_node(trimmed_var);
+	else if (ft_strchr(trimmed_var, '=') && ft_strlen(trimmed_var) > 1
+		&& ft_getenv(tmp_var, env))
+	{
+		unset_env(tmp_var, env);
+		add_env_tail(env, add_env_node(trimmed_var));
+	}
 	else if (ft_strchr(trimmed_var, '=') && ft_strlen(trimmed_var) > 1)
 		add_env_tail(env, add_env_node(trimmed_var));
 	else
 		ft_printf("minishell: export: `%s': not a valid identifier\n",
 			trimmed_var);
 	free(trimmed_var);
+	free(tmp_var);
 }
 
 void	unset_env(char *var, t_env **env)
