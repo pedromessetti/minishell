@@ -69,7 +69,7 @@ void	lex(char *prompt, t_env **env)
 		token = set_token(token, type, prompt + start, end - start);
 		i = end;
 	}
-	iter_tokens(&token);
+	iter_tokens(&token, *env);
 	// print_token_list(token);
 	parser(token, env);
 	free_tokens(&token);

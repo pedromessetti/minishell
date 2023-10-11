@@ -21,6 +21,7 @@
 # include <signal.h>
 # include <stddef.h>
 # include <stdio.h>
+# include <stdbool.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
@@ -42,9 +43,13 @@
 # define PARSER_REDIR_APPEND 9
 # define PARSER_REDIR_HERE_DOC 10
 
+//extern int g_exit_status;
+
+
 /* Token List */
 typedef struct s_token
 {
+	char			*var;
 	int				type;
 	char			*content;
 	struct s_token	*next;
@@ -68,6 +73,7 @@ typedef struct s_cmd
 	int				dup2_fd[2];
 	t_io			io;
 	t_token			*redirs;
+	size_t			num_process;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd_tb;
@@ -92,7 +98,7 @@ int					is_redirection(char *str);
 t_token				*set_token(t_token *tokens, int type, char *str, int len);
 void				free_tokens(t_token **token_list);
 void				print_token_list(t_token *token_list);
-void				iter_tokens(t_token **tokens);
+void				iter_tokens(t_token **tokens, t_env *env);
 void				add_token_to_tail(t_token **head, t_token *new_node);
 t_token*			duplicate_token(t_token *token);
 
@@ -105,7 +111,7 @@ void					parser(t_token *tokens, t_env **env);
 /* --- Checkers --- */
 
 void				check_ac(int ac);
-void				check_exit_status(char *arg);
+// void				check_exit_status(char *arg);
 
 /* --- Command Path Functions --- */
 
@@ -156,7 +162,13 @@ void				unset_env(char *var, t_env **env);
 
 void				signal_handler(int sig);
 
-
-
-
+/* --- Expander --- */
+char	*expand_dollar(char *str, int *i, t_env *env);
+char				*separate_var(char *str);
+char				*search_var(char *str, t_env *env);
+char				*ft_expansion(char *str, char c, t_env *env);
+char	*free_joined(char *s1, char *s2);
+int	set_exit_code(int i, bool flag);
+char	*remove_quotes(char *tk, t_env *env);
+int	skip_quotes(char *str);
 #endif

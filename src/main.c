@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+int g_exit_status = 0;
+
+void	ft_exit(char *str) {
+	char **matriz = ft_split(str, ' ');
+
+	if (matriz[1]) {
+		if (ft_str_is_num(matriz[1]))
+			exit(ft_atoi(matriz[1]));
+			
+		else {
+			printf("minishell: exit: %s: numeric argument required\n",matriz[1]);
+			set_exit_code(1, true);
+		}
+	}
+	else
+		exit(g_exit_status);
+}
+
 void	init(t_env **env)
 {
 	char	*prompt;
@@ -24,14 +42,8 @@ void	init(t_env **env)
 		add_history(prompt);
 		if (ft_strnstr(prompt, "exit", ft_strlen(prompt)))
 		{
-			prompt = ft_strnstr(prompt, "exit", ft_strlen(prompt));
-			prompt += 4;
-			while (*prompt == ' ')
-				prompt++;
-			check_exit_status(prompt);
-			free_env(env);
 			printf("exit\n");
-			exit(EXIT_SUCCESS);
+			ft_exit(prompt);
 		}
 		lex(prompt, env);
 		free(prompt);
@@ -53,5 +65,5 @@ int	main(int ac, char **av, char **envp)
 		env = create_env(env, envp[i]);
 	init(&env);
 	free_env(&env);
-	return (0);
+	return (set_exit_code(0, false));
 }

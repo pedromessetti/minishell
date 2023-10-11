@@ -22,6 +22,7 @@ void	signal_handler(int sig)
 	{
 		if (pid == -1)
 		{
+			set_exit_code(130, true);
 			write(1, "\n", 1);
 			rl_replace_line("", 0);
 			rl_on_new_line();
@@ -32,4 +33,13 @@ void	signal_handler(int sig)
 	}
 	if (sig == SIGQUIT)
 		write(1, "\n", 1);
+}
+
+int	set_exit_code(int i, bool flag)
+{
+	static int	code;
+
+	if (flag)
+		code = i;
+	return (code);
 }
