@@ -45,10 +45,7 @@ void	exec_pwd(int fd)
 
 	cdir = getcwd(NULL, 0);
 	if (!cdir)
-	{
 		set_exit_code(1, true);
-		return (0);
-	}
 	ft_putendl_fd(cdir, fd);
 	free(cdir);
 	set_exit_code(0, true);
@@ -131,27 +128,25 @@ void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env,
 }
 
 
-int	ft_exit(t_env *data, t_cmd_tb **cmd)
-{
-	int	n;
-	int	j;
+// int	ft_exit(t_cmd_tb **cmd)
+// {
+// 	int	n;
 
-	n = set_exit_code(0, false);
-	j = 0;
-	if (!(*cmd)->args[1] && free_all(0, data, cmd, 1))
-		exit (set_exit_code(0, false));
-	else
-	{
-		if ((*cmd)->args[2] && !check_exit_arg((*cmd)->args[1]))
-		{
-			ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
-			free_all(0, data, cmd, 1);
-			return (set_exit_code(1, true));
-		}
-		if (check_exit_arg((*cmd)->args[1]) && free_all(0, data, cmd, 1))
-			return (set_exit_code(2, true));
-		n = check_number((*cmd)->args[1]);
-	}
-	free_all(0, data, cmd, 1);
-	exit (set_exit_code(n, true));
-}
+// 	n = set_exit_code(0, false);
+// 	if (!(*cmd)->args[1] && free(cmd))
+// 		exit (set_exit_code(0, false));
+// 	else
+// 	{
+// 		if ((*cmd)->args[2] && !check_exit_arg((*cmd)->args[1]))
+// 		{
+// 			ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
+// 			free(0, data, cmd, 1);
+// 			return (set_exit_code(1, true));
+// 		}
+// 		if (check_exit_arg((*cmd)->args[1]) && free(cmd))
+// 			return (set_exit_code(2, true));
+// 		n = check_number((*cmd)->args[1]);
+// 	}
+// 	free(cmd);
+// 	exit (set_exit_code(n, true));
+// }

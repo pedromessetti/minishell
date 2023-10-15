@@ -162,14 +162,20 @@ void				unset_env(char *var, t_env **env);
 /* --- Signals --- */
 
 void				signal_handler(int sig);
+int					set_exit_code(int i, bool flag);
 
 /* --- Expander --- */
-char	*expand_dollar(char *str, int *i, t_env *env);
+char				*expand_dollar(char *str, int *i, t_env *env);
 char				*separate_var(char *str);
 char				*search_var(char *str, t_env *env);
 char				*ft_expansion(char *str, char c, t_env *env);
-char	*free_joined(char *s1, char *s2);
-int	set_exit_code(int i, bool flag);
-char	*remove_quotes(char *tk, t_env *env);
-int	skip_quotes(char *str);
+char				*free_joined(char *s1, char *s2);
+char				*remove_quotes(char *tk, t_env *env);
+int					skip_quotes(char *str);
+
+/* Exit Status*/
+// int					check_exit_arg(char *str);
+// int					free_all(char *str, t_env *data, t_cmd_tb **cmds, int flag);
+// 						unsigned char	check_number(char *str);
+//						int	ft_exit(t_cmd_tb **cmd);
 #endif

@@ -48,7 +48,6 @@ void	init(t_env **env)
 		lex(prompt, env);
 		free(prompt);
 	}
-	return (set_exit_code(0, false));
 }
 
 int	main(int ac, char **av, char **envp)

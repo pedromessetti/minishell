@@ -60,39 +60,29 @@ int	ft_wait(t_cmd_tb *curr)
 	return (exit_status);
 }
 
-int	start_process(t_cmd_tb *cmd_tb, t_env **env)
+static int	init_exit_status(int status)
 {
-	t_cmd_tb	*curr;
-	t_cmd_tb	info_cmd = {0};
-	int			exit_status;
+	int	return_code;
+	int	signal_number;
 
-	curr = cmd_tb;
-	while (curr)
+	return_code = 0;
+	signal_number = 0;
+	if (WIFEXITED(status))
+		return_code = WEXITSTATUS(status);
+	else
 	{
-		if (pipe(curr->pipe_fd) == -1)
+		return_code = 128;
+		if (WIFSIGNALED(status))
+			signal_number = WTERMSIG(status);
+		else
 		{
-			perror("Error creating pipe");
-			return (1);
-		}
-		curr->pid = fork();
-		if (curr->pid == 0)
-		{
-			bind_redirs(curr);
-			bind_stdin(curr);
-			bind_stdout(curr);
-			exec_cmd(curr, env);
-		}
-		if (curr != cmd_tb)
-			close(curr->prev->pipe_fd[0]);
-		close(curr->pipe_fd[1]);
-		curr = curr->next;
+			if (WIFSTOPPED(status))
+				signal_number = SIGSTOP;
+			if (WIFCONTINUED(status))
+				signal_number = SIGCONT;
+		}			
 	}
-	close_all_pipes(cmd_tb);
-	//curr = cmd_tb;
-	// exit_status = ft_wait(curr);
-	exit_status = wait_all_child(info_cmd.pid, info_cmd.num_process);
-	set_exit_code(exit_status, true);
-	return exit_status;
+	return (return_code + signal_number);
 }
 
 static int	init_stat_loc_after_wait(pid_t last_fork_pid, size_t num_process)
@@ -129,27 +119,38 @@ int	wait_all_child(pid_t last_fork_pid, size_t num_proc)
 	return init_exit_status(stat_loc);
 }
 
-static int	init_exit_status(int status)
+int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 {
-	int	return_code;
-	int	signal_number;
+	t_cmd_tb	*curr;
+	t_cmd_tb	info_cmd = {0};
+	int			exit_status;
 
-	return_code = 0;
-	signal_number = 0;
-	if (WIFEXITED(status))
-		return_code = WEXITSTATUS(status);
-	else
+	curr = cmd_tb;
+	while (curr)
 	{
-		return_code = 128;
-		if (WIFSIGNALED(status))
-			signal_number = WTERMSIG(status);
-		else
+		if (pipe(curr->pipe_fd) == -1)
 		{
-			if (WIFSTOPPED(status))
-				signal_number = SIGSTOP;
-			if (WIFCONTINUED(status))
-				signal_number = SIGCONT;
-		}			
+			perror("Error creating pipe");
+			return (1);
+		}
+		curr->pid = fork();
+		if (curr->pid == 0)
+		{
+			bind_redirs(curr);
+			bind_stdin(curr);
+			bind_stdout(curr);
+			exec_cmd(curr, env);
+		}
+		if (curr != cmd_tb)
+			close(curr->prev->pipe_fd[0]);
+		close(curr->pipe_fd[1]);
+		curr = curr->next;
 	}
-	return (return_code + signal_number);
+	close_all_pipes(cmd_tb);
+	//curr = cmd_tb;
+	// exit_status = ft_wait(curr);
+	exit_status = wait_all_child(info_cmd.pid, info_cmd.num_process);
+	set_exit_code(exit_status, true);
+	return exit_status;
 }
+
