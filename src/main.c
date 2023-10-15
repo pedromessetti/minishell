@@ -12,23 +12,33 @@
 
 #include "minishell.h"
 
-int g_exit_status = 0;
-
-void	ft_exit(char *str) {
-	char **matriz = ft_split(str, ' ');
-
-	if (matriz[1]) {
-		if (ft_str_is_num(matriz[1]))
-			exit(ft_atoi(matriz[1]));
-			
-		else {
-			printf("minishell: exit: %s: numeric argument required\n",matriz[1]);
-			set_exit_code(1, true);
-		}
-	}
-	else
-		exit(g_exit_status);
+int exit_error(char *str)
+{
+    char *temp = ft_strjoin("exit: ", str);
+    temp = free_joined(temp, ft_strdup(": numeric argument required"));
+    ft_putendl_fd(temp, STDERR_FILENO);
+    free(temp);
+    int exit_code = set_exit_code(255, true);
+	printf("%d\n",exit_code);
+	exit(exit_code);
 }
+
+void ft_exit(char *str)
+{
+    char **matriz = ft_split(str, ' ');
+
+    if (matriz[1]) {
+        if (ft_str_is_num(matriz[1]))
+            exit(ft_atoi(matriz[1]));
+        else {
+			printf("%s\n", matriz[1]);
+            exit_error(matriz[1]);
+        }
+    } else {
+        exit(set_exit_code(0, false));
+    }
+}
+
 
 void	init(t_env **env)
 {

@@ -122,7 +122,7 @@ int	wait_all_child(pid_t last_fork_pid, size_t num_proc)
 int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 {
 	t_cmd_tb	*curr;
-	t_cmd_tb	info_cmd = {0};
+	// t_cmd_tb	info_cmd = {0};
 	int			exit_status;
 
 	curr = cmd_tb;
@@ -147,9 +147,9 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 		curr = curr->next;
 	}
 	close_all_pipes(cmd_tb);
-	//curr = cmd_tb;
-	// exit_status = ft_wait(curr);
-	exit_status = wait_all_child(info_cmd.pid, info_cmd.num_process);
+	curr = cmd_tb;
+	exit_status = ft_wait(curr);
+	//exit_status = wait_all_child(info_cmd.pid, info_cmd.num_process);
 	set_exit_code(exit_status, true);
 	return exit_status;
 }
