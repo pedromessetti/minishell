@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:07 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 18:20:59 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/10/15 11:58:29 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../libft/inc/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>

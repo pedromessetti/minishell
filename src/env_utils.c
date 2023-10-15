@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:49:09 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:49:11 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/10/15 13:20:40 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,10 @@ void	free_env(t_env **env_list)
 
 	tmp = NULL;
 	if (!*env_list)
-		return ;
+	{
+		set_exit_code(0, true);
+		return;
+	}
 	while (*env_list)
 	{
 		tmp = (*env_list)->next;
@@ -85,4 +88,5 @@ void	free_env(t_env **env_list)
 		free(*env_list);
 		*env_list = tmp;
 	}
+	set_exit_code(0, true);
 }
