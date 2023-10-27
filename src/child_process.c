@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "minishell.h"
 
 void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
@@ -47,19 +48,6 @@ void	close_all_pipes(t_cmd_tb *list)
 	}
 }
 
-int	ft_wait(t_cmd_tb *curr)
-{
-	int	exit_status;
-
-	exit_status = 0;
-	while (curr)
-	{
-		waitpid(curr->pid, &exit_status, 0);
-		curr = curr->next;
-	}
-	return (exit_status);
-}
-
 static int	init_exit_status(int status)
 {
 	int	return_code;
@@ -85,44 +73,36 @@ static int	init_exit_status(int status)
 	return (return_code + signal_number);
 }
 
-static int	init_stat_loc_after_wait(pid_t last_fork_pid, size_t num_process)
+static int	init_stat_loc_after_wait(t_cmd_tb *curr)
 {
-	size_t	i;
-	int		wait_pid;
 	int		stat_loc;
-	int		this_stat_loc;
 	int		is_stat_sig_int;
 
-	i = 0;
 	is_stat_sig_int = 0;
-	while (i < num_process)
+	while (curr)
 	{
-		wait_pid = wait(&stat_loc);
-		if (wait_pid != -1)
-			i++;
+		waitpid(curr->pid, &stat_loc, 0);
 		if (init_exit_status(stat_loc) == 130 || \
-									init_exit_status(stat_loc) == 131)
+			init_exit_status(stat_loc) == 131)
 			is_stat_sig_int = 1;
-		if (wait_pid == last_fork_pid)
-			this_stat_loc = stat_loc;
+		curr = curr->next;
 	}
 	if (is_stat_sig_int)
 		ft_putstr_fd("\n", 1);
-	return (this_stat_loc);
+	return (stat_loc);
 }
 
-int	wait_all_child(pid_t last_fork_pid, size_t num_proc)
+int	wait_all_child(t_cmd_tb *curr)
 {
 	int	stat_loc;
 
-	stat_loc = init_stat_loc_after_wait(last_fork_pid, num_proc);
+	stat_loc = init_stat_loc_after_wait(curr);
 	return init_exit_status(stat_loc);
 }
 
 int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 {
 	t_cmd_tb	*curr;
-	// t_cmd_tb	info_cmd = {0};
 	int			exit_status;
 
 	curr = cmd_tb;
@@ -148,9 +128,7 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 	}
 	close_all_pipes(cmd_tb);
 	curr = cmd_tb;
-	exit_status = ft_wait(curr);
-	//exit_status = wait_all_child(info_cmd.pid, info_cmd.num_process);
+	exit_status = wait_all_child(curr);
 	set_exit_code(exit_status, true);
-	return exit_status;
-}
+	
 
