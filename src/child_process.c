@@ -131,4 +131,4 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 	exit_status = wait_all_child(curr);
 	set_exit_code(exit_status, true);
 	
-
+}

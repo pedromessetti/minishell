@@ -48,7 +48,6 @@ t_cmd_tb	*find_path(t_cmd_tb *cmd_tb, char **possible_paths, char *cmd,
 	}
 	if (!tmp || (!possible_paths[i]))
 	{
-		
 		set_exit_code(127,true);
 		ft_printf("minishell: %s: command not found\n", cmd);
 	}
