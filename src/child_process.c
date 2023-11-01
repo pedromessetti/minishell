@@ -30,9 +30,11 @@ void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 		execve(cmd_list->cmd_path, cmd_list->args, get_full_env(env));
 		close(cmd_list->dup2_fd[0]);
 		close(cmd_list->dup2_fd[1]);
+		free_cmd_tb(&cmd_list);
+		set_exit_code(errno, true);
 	}
 	free_cmd_tb(&cmd_list);
-	exit(EXIT_FAILURE);
+	exit(set_exit_code(-1, false));
 }
 
 void	close_all_pipes(t_cmd_tb *list)

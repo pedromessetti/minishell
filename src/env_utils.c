@@ -88,5 +88,4 @@ void	free_env(t_env **env_list)
 		free(*env_list);
 		*env_list = tmp;
 	}
-	set_exit_code(0, true);
 }
