@@ -14,7 +14,7 @@
 
 void	exec_cd(const char *directory, t_env **env)
 {
-	int exit_code;
+	int exit_code = 0;
 	
 	if (ft_strncmp(directory, "~/", 2) == 0 || ft_strcmp(directory, "~") == 0
 		|| !*directory)
