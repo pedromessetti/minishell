@@ -53,14 +53,8 @@ void	exec_pwd(int fd)
 
 void	exec_echo(char *arg, int fd, t_env **env)
 {
-	if (arg && arg[0] == '$')
-	{
-		if (ft_getenv(arg, env))
-			ft_putendl_fd(ft_getenv(arg, env), fd);
-		else
-			ft_putendl_fd("", fd);
-	}
-	else if (arg)
+	(void)env;
+	if (arg)
 		ft_putendl_fd(arg, fd);
 	else if (!arg)
 		ft_putendl_fd("", fd);

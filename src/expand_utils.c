@@ -37,17 +37,18 @@ char	*separate_var(char *str)
 
 char	*search_var(char *str, t_env *env)
 {
+	char	*value;
 	while (env)
 	{
 		if (!ft_strncmp(str, env->content, ft_strlen(str)))
 			break ;
 		env = env->next;
 	}
-	free(str);
 	if (!env)
 		return (ft_strdup(""));
-	str = ft_strdup(env->content);
-	return (str);
+	value = ft_strdup(env->content + ft_strlen(str) + 1);
+	free(str);
+	return (value);
 }
 
 char	*free_joined(char *s1, char *s2)
@@ -62,49 +63,27 @@ char	*free_joined(char *s1, char *s2)
 	return (str);
 }
 
-char	*remove_quotes(char *tk, t_env *env)
-{
-	int		i;
-	int		j;
-	char	*s;
-	char	*temp;
-
-	i = 0;
-	j = 0;
-	s = ft_strdup("");
-	temp = 0;
-	while (i < (int)ft_strlen(tk))
-	{
-		j += skip_quotes(&tk[i]);
-		if (tk[i] == '\'' || tk[i] == '\"')
-			temp = ft_expansion(ft_substr(tk, i + 1, (j - i - 1)), tk[i], env);
-		else
-			temp = ft_expansion(ft_substr(tk, i, (j - i + 1)), tk[i], env);
-		s = free_joined(s, temp);
-		i = ++j;
-	}
-	free(tk);
-	return (s);
-}
-
-/* Function to skip characters between quotes
-or to skip characters until a quotation mark is found */
-int	skip_quotes(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[0] != '\'' && str[0] != '\"')
-	{
-		while (str[i + 1] && str[i] != '\'' && str[i] != '\"')
-			i++;
-		if (str[i] && (str[i] == '\'' || str[i] == '\"'))
-			i--;
-	}
-	else
-	{
-		while (str[++i] && str[i] != str[0])
-			continue ;
-	}
-	return (i);
-}
+// int	ft_isforbidden_char(char *str)
+// {
+// 	if (str[0] && (str[0] == '\\' || str[0] == '`' || str[0] == '['
+// 			|| str[0] == ']' || str[0] == ';' || str[0] == '#'
+// 			|| str[0] == '{' || str[0] == '}'))
+// 	{
+// 		forbidden_print(2, str);
+// 		return (set_exit_code(1, true));
+// 	}
+// 	if (str[0] && ((str[0] == '(' && str[1] == ')')
+// 			|| (str[0] == '<' && str[1] == '&')
+// 			|| (str[0] == '>' && str[1] == '&')
+// 			|| (str[0] == '&' && str[1] == '>')
+// 			|| (str[0] == '$' && str[1] == '(')
+// 			|| (str[0] == ')' && str[1] == '$')
+// 			|| (str[0] == '[' && str[1] == ']')
+// 			|| (str[0] == '&' && str[1] == '&')
+// 			|| (str[0] == '|' && str[1] == '|')))
+// 	{
+// 		forbidden_print(1, &str[0]);
+// 		return (set_exit_code(1, true));
+// 	}
+// 	return (0);
+// }

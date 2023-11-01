@@ -57,6 +57,7 @@ int	is_redirection(char *str)
 void	iter_tokens(t_token **tokens, t_env *env)
 {
 	t_token	*token;
+	t_token	*tmp;
 
 	token = *tokens;
 	while (token)
@@ -113,6 +114,20 @@ void	iter_tokens(t_token **tokens, t_env *env)
 		if (is_redirection(token->content) && token->next)
 			token->next->type = TOKEN_FILE;
 		token->content = ft_expansion(token->content, 0, env);
-		token = token->next;
+		if (ft_strlen(token->content) == 0)
+		{
+			if (token->prev)
+				token->prev->next = token->next;
+			if (token->next)
+				token->next->prev = token->prev;
+			tmp = token->next;
+			token->next = NULL;
+			token->prev = NULL;
+			free_tokens(&token);
+			
+			token = tmp;
+		}
+		else
+			token = token->next;
 	}
 }

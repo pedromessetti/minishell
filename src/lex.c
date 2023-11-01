@@ -37,8 +37,7 @@ void	handle_literal(t_token **token, char *prompt, int *i)
 	while (prompt[*i] && prompt[*i] != prompt[start])
 		(*i)++;
 	end = *i;
-	*token = set_token(*token, TOKEN_LITERAL, prompt + start + 1, end - 1
-			- start);
+	*token = set_token(*token, TOKEN_LITERAL, prompt + start, end - start + 1);
 	(*i)++;
 }
 

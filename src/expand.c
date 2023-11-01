@@ -31,36 +31,43 @@ char	*expand_dollar(char *str, int *i, t_env *env)
 		var = exit_code;
 	}
 	else if (ft_strcmp(var, "$"))
+	{
 		var = search_var(var, env);
+	}
 	return (var);
 }
 
 
-char	*ft_expansion(char *str, char c, t_env *env)
+char	*ft_expansion(char *str, char state, t_env *env)
 {
 	int		i;
-	int		j;
 	char	*s;
+	char	*tmp;
 
-	j = 0;
-	if (!ft_strcmp(str, "$"))
-		return (str);
-	s = ft_strdup("");
-	while (str[j])
+	s = ft_strdup(str);
+
+	i = 0;	
+	while (str[i])
 	{
-		i = j;
-		if (c != '\'' && str[i] == '$') {
-			s = free_joined(s, expand_dollar(str, &i, env));
-			if (ft_strnstr(s, "=", ft_strlen(s)))
-				s = ft_strnstr(s, "=", ft_strlen(s)) + 1;
-		}
-		else
+		if (str[i] == '\'' || str[i] == '\"')
 		{
-			while (str[++i] && str[i] != '$')
-				continue ;
-			s = free_joined(s, ft_substr(str, j, (i - j)));
+			if (!state)
+				state = str[i];
+			else if (state == str[i])
+				state = '\0';
 		}
-		j = i;
+		if (state == '\'' || str[i] != '$')
+		{
+			i++;
+			continue;
+		}
+		tmp = ft_substr(s, 0, i);
+		free(s);
+		
+		tmp = free_joined(tmp, expand_dollar(str, &i, env));
+		
+		s = free_joined(tmp, ft_substr(str, i, ft_strlen(str)));
+		
 	}
 	free(str);
 	return (s);
