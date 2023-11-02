@@ -23,7 +23,7 @@ char	*separate_var(char *str)
 	{
 		if (str[i] == '$' || str[i] == '*' || str[i] == 32 || str[i] == ':'
 			|| str[i] == '\'' || str[i] == '\"' || str[i] == '/'
-			|| str[i] == '.' || str[i] == ',' || (str[i] == '?' && i == 1))
+			|| str[i] == '.' || str[i] == ',' || (str[i] == '?' && i == 1) || ft_isdigit(str[i - 1]))
 			break ;
 	}
 	if (i == 1 && str[i - 1] == '$' && str[i] != '?')
@@ -63,27 +63,48 @@ char	*free_joined(char *s1, char *s2)
 	return (str);
 }
 
-// int	ft_isforbidden_char(char *str)
-// {
-// 	if (str[0] && (str[0] == '\\' || str[0] == '`' || str[0] == '['
-// 			|| str[0] == ']' || str[0] == ';' || str[0] == '#'
-// 			|| str[0] == '{' || str[0] == '}'))
-// 	{
-// 		forbidden_print(2, str);
-// 		return (set_exit_code(1, true));
-// 	}
-// 	if (str[0] && ((str[0] == '(' && str[1] == ')')
-// 			|| (str[0] == '<' && str[1] == '&')
-// 			|| (str[0] == '>' && str[1] == '&')
-// 			|| (str[0] == '&' && str[1] == '>')
-// 			|| (str[0] == '$' && str[1] == '(')
-// 			|| (str[0] == ')' && str[1] == '$')
-// 			|| (str[0] == '[' && str[1] == ']')
-// 			|| (str[0] == '&' && str[1] == '&')
-// 			|| (str[0] == '|' && str[1] == '|')))
-// 	{
-// 		forbidden_print(1, &str[0]);
-// 		return (set_exit_code(1, true));
-// 	}
-// 	return (0);
-// }
+void	forbidden_print(int flag, char *str)
+{
+	char	*temp;
+
+	temp = 0;
+	if (flag == 1)
+	{
+		temp = ft_strjoin("Forbidden sequence of characters detected: '", str);
+		temp = free_joined(temp, ft_strdup("'"));
+	}
+	else if (flag == 2)
+	{
+		temp = ft_substr(str, 0, 1);
+		temp = free_joined(ft_strdup("Forbidden character detected: '"), temp);
+		temp = free_joined(temp, ft_strdup("'"));
+	}
+	ft_putendl_fd(temp, STDERR_FILENO);
+	if (temp)
+		free(temp);
+}
+
+int	ft_isforbidden_char(char *str)
+{
+	if (str[0] && (str[0] == '\\' || str[0] == '`' || str[0] == '['
+			|| str[0] == ']' || str[0] == ';' || str[0] == '#'
+			|| str[0] == '{' || str[0] == '}'))
+	{
+		forbidden_print(2, str);
+		return (set_exit_code(1, true));
+	}
+	if (str[0] && ((str[0] == '(' && str[1] == ')')
+			|| (str[0] == '<' && str[1] == '&')
+			|| (str[0] == '>' && str[1] == '&')
+			|| (str[0] == '&' && str[1] == '>')
+			|| (str[0] == '$' && str[1] == '(')
+			|| (str[0] == ')' && str[1] == '$')
+			|| (str[0] == '[' && str[1] == ']')
+			|| (str[0] == '&' && str[1] == '&')
+			|| (str[0] == '|' && str[1] == '|')))
+	{
+		forbidden_print(1, &str[0]);
+		return (set_exit_code(1, true));
+	}
+	return (0);
+}

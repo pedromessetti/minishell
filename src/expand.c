@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+int	ft_isdigit(int c)
+{
+	if (c >= 48 && c <= 57)
+		return (c);
+	return (0);
+}
+
 char	*expand_dollar(char *str, int *i, t_env *env)
 {
 	char	*var;
@@ -36,7 +43,6 @@ char	*expand_dollar(char *str, int *i, t_env *env)
 	}
 	return (var);
 }
-
 
 char	*ft_expansion(char *str, char state, t_env *env)
 {

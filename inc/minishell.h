@@ -163,6 +163,7 @@ void				unset_env(char *var, t_env **env);
 
 void				signal_handler(int sig);
 int					set_exit_code(int i, bool flag);
+int					ft_isforbidden_char(char *str);
 
 /* --- Expander --- */
 char				*expand_dollar(char *str, int *i, t_env *env);
@@ -174,8 +175,6 @@ char				*remove_quotes(char *tk, t_env *env);
 int					skip_quotes(char *str);
 
 /* Exit Status*/
-// int					check_exit_arg(char *str);
-// int					free_all(char *str, t_env *data, t_cmd_tb **cmds, int flag);
-// 						unsigned char	check_number(char *str);
-//						int	ft_exit(t_cmd_tb **cmd);
+int					ft_isdigit(int c);
+
 #endif

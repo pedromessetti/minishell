@@ -60,6 +60,8 @@ void	lex(char *prompt, t_env **env)
 			handle_literal(&token, prompt, &i);
 			continue ;
 		}
+		if (ft_isforbidden_char(&prompt[i]))
+			free(prompt);
 		start = i;
 		end = start;
 		while (prompt[end] && !ft_isspace(prompt[end]))
