@@ -20,6 +20,7 @@ void	exec_cd(const char *directory, t_env **env)
 		|| !*directory)
 	{
 		chdir(ft_getenv("HOME", env));
+		exit_code = 0;
 	}
 	else
 	{

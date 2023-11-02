@@ -81,6 +81,7 @@ static int	init_stat_loc_after_wait(t_cmd_tb *curr)
 	int		is_stat_sig_int;
 
 	is_stat_sig_int = 0;
+	stat_loc = 0;
 	while (curr)
 	{
 		waitpid(curr->pid, &stat_loc, 0);
@@ -108,6 +109,8 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 	int			exit_status;
 
 	curr = cmd_tb;
+	if (!curr)
+		return (0);
 	while (curr)
 	{
 		if (pipe(curr->pipe_fd) == -1)

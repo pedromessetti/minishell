@@ -12,6 +12,14 @@
 
 #include "minishell.h"
 
+int	ft_isdigit(int c)
+{
+	if (c >= 48 && c <= 57)
+		return (c);
+	return (0);
+}
+
+
 unsigned char	check_number(char *str)
 {
 	unsigned long long	n;
@@ -67,4 +75,22 @@ int	free_all(char *str, t_env *data, t_cmd_tb **cmds, int flag)
 		(*cmds)->pid = 0;
 	}
 	return (1);
+}
+
+unsigned long long	ft_atoll(char *str)
+{
+	unsigned long long	res;
+	int					i;
+
+	res = 0;
+	i = 0;
+	while (str[i])
+	{
+		while (str[i] > 47 && str[i] < 58)
+		{
+			res = (res * 10) + (str[i] - '0');
+			i++;
+		}
+	}
+	return (res);
 }

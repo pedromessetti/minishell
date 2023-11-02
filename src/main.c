@@ -19,7 +19,6 @@ void free_matriz(char **matriz) {
     for (int i = 0; matriz[i]; i++) {
         free(matriz[i]);
     }
-
     free(matriz);
 }
 
