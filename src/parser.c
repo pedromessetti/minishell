@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 13:26:50 by annamarianu       #+#    #+#             */
-/*   Updated: 2023/10/15 12:54:09 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/09/14 11:41:37 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	parser(t_token *tokens, t_env **env)
 				&& tokens->next->type == TOKEN_ARG)
 			{
 				ft_printf("minishell: cd: too many arguments\n");
-				set_exit_code(1, true);
 				while (tokens && tokens->type == TOKEN_ARG)
 					tokens = tokens->next;
 				continue ;
