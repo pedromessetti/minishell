@@ -29,6 +29,17 @@ char	**set_possible_paths(t_env **env)
 	return (paths_arr);
 }
 
+int	check_exit_code(char *s1, char *s2, int flag)
+{
+	char	*str;
+
+	str = ft_strjoin(s1, s2);
+	ft_putendl_fd(str, STDERR_FILENO);
+	set_exit_code(flag,true);
+	free(str);
+	return (flag);
+}
+
 /*Find the correct path by tryng to acess all the possible paths*/
 t_cmd_tb	*find_path(t_cmd_tb *cmd_tb, char **possible_paths, char *cmd,
 		char **args)
@@ -47,7 +58,7 @@ t_cmd_tb	*find_path(t_cmd_tb *cmd_tb, char **possible_paths, char *cmd,
 		tmp = NULL;
 	}
 	if (!tmp || (!possible_paths[i]))
-		ft_printf("minishell: %s: command not found\n", cmd);
+		check_exit_code(cmd,": command not found", 127);
 	cmd_tb = set_cmd_tb(cmd_tb, tmp, args);
 	return (cmd_tb);
 }
@@ -61,7 +72,7 @@ t_cmd_tb	*choose_handle(char *cmd, t_cmd_tb *cmd_tb, char **args,
 	if (ft_isdir(cmd))
 	{
 		if (access(cmd, F_OK) == -1)
-			ft_printf("minishell: %s: No such file or directory\n", cmd);
+			check_exit_code(cmd ,": No such file or directory",1);
 		tmp = ft_strdup(cmd);
 		cmd_tb = set_cmd_tb(cmd_tb, tmp, args);
 	}

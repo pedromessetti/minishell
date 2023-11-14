@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
+/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:01 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/14 11:25:03 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/10/15 13:15:36 by annamarianu      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ char	**get_full_env(t_env **env)
 	tmp = *env;
 	i = 0;
 	if (!full_env)
+	{
+		set_exit_code(1, true);
 		return (NULL);
+	}
 	while (tmp)
 	{
 		full_env[i] = tmp->content;
