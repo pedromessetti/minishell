@@ -37,7 +37,8 @@ void	handle_literal(t_token **token, char *prompt, int *i)
 	while (prompt[*i] && prompt[*i] != prompt[start])
 		(*i)++;
 	end = *i;
-	*token = set_token(*token, TOKEN_LITERAL, prompt + start, end - start + 1);
+	*token = set_token(*token, TOKEN_LITERAL, prompt + start + 1, end - 1
+			- start);
 	(*i)++;
 }
 
@@ -60,8 +61,6 @@ void	lex(char *prompt, t_env **env)
 			handle_literal(&token, prompt, &i);
 			continue ;
 		}
-		if (ft_isforbidden_char(&prompt[i]))
-			free(prompt);
 		start = i;
 		end = start;
 		while (prompt[end] && !ft_isspace(prompt[end]))
@@ -70,7 +69,7 @@ void	lex(char *prompt, t_env **env)
 		token = set_token(token, type, prompt + start, end - start);
 		i = end;
 	}
-	iter_tokens(&token, *env);
+	iter_tokens(&token);
 	// print_token_list(token);
 	parser(token, env);
 	free_tokens(&token);

@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: annamarianunes <annamarianunes@student.    +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/10/15 12:44:07 by annamarianu      ###   ########.fr       */
+/*   Updated: 2023/09/12 18:10:46 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -30,11 +29,9 @@ void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 		execve(cmd_list->cmd_path, cmd_list->args, get_full_env(env));
 		close(cmd_list->dup2_fd[0]);
 		close(cmd_list->dup2_fd[1]);
-		free_cmd_tb(&cmd_list);
-		set_exit_code(errno, true);
 	}
 	free_cmd_tb(&cmd_list);
-	exit(set_exit_code(-1, false));
+	exit(EXIT_FAILURE);
 }
 
 void	close_all_pipes(t_cmd_tb *list)
@@ -50,57 +47,17 @@ void	close_all_pipes(t_cmd_tb *list)
 	}
 }
 
-static int	init_exit_status(int status)
+int	ft_wait(t_cmd_tb *curr)
 {
-	int	return_code;
-	int	signal_number;
+	int	exit_status;
 
-	return_code = 0;
-	signal_number = 0;
-	if (WIFEXITED(status))
-		return_code = WEXITSTATUS(status);
-	else
-	{
-		return_code = 128;
-		if (WIFSIGNALED(status))
-			signal_number = WTERMSIG(status);
-		else
-		{
-			if (WIFSTOPPED(status))
-				signal_number = SIGSTOP;
-			if (WIFCONTINUED(status))
-				signal_number = SIGCONT;
-		}			
-	}
-	return (return_code + signal_number);
-}
-
-static int	init_stat_loc_after_wait(t_cmd_tb *curr)
-{
-	int		stat_loc;
-	int		is_stat_sig_int;
-
-	is_stat_sig_int = 0;
-	stat_loc = 0;
+	exit_status = 0;
 	while (curr)
 	{
-		waitpid(curr->pid, &stat_loc, 0);
-		if (init_exit_status(stat_loc) == 130 || \
-			init_exit_status(stat_loc) == 131)
-			is_stat_sig_int = 1;
+		waitpid(curr->pid, &exit_status, 0);
 		curr = curr->next;
 	}
-	if (is_stat_sig_int)
-		ft_putstr_fd("\n", 1);
-	return (stat_loc);
-}
-
-int	wait_all_child(t_cmd_tb *curr)
-{
-	int	stat_loc;
-
-	stat_loc = init_stat_loc_after_wait(curr);
-	return init_exit_status(stat_loc);
+	return (exit_status);
 }
 
 int	start_process(t_cmd_tb *cmd_tb, t_env **env)
@@ -109,8 +66,6 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 	int			exit_status;
 
 	curr = cmd_tb;
-	if (!curr)
-		return (0);
 	while (curr)
 	{
 		if (pipe(curr->pipe_fd) == -1)
@@ -133,7 +88,6 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 	}
 	close_all_pipes(cmd_tb);
 	curr = cmd_tb;
-	exit_status = wait_all_child(curr);
-	set_exit_code(exit_status, true);
-	return(exit_status);
+	exit_status = ft_wait(curr);
+	return (exit_status);
 }
