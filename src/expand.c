@@ -78,3 +78,48 @@ char	*ft_expansion(char *str, char state, t_env *env)
 	free(str);
 	return (s);
 }
+
+char	*remove_quotes(char *tk, t_env *env)
+{
+	int		i;
+	int		j;
+	char	*s;
+	char	*temp;
+
+	i = 0;
+	j = 0;
+	s = ft_strdup("");
+	temp = 0;
+	while (i < (int)ft_strlen(tk))
+	{
+		j += skip_quotes(&tk[i]);
+		if (tk[i] == '\'' || tk[i] == '\"')
+			temp = ft_expansion(ft_substr(tk, i + 1, (j - i - 1)), tk[i], env);
+		else
+			temp = ft_expansion(ft_substr(tk, i, (j - i + 1)), tk[i], env);
+		s = free_joined(s, temp);
+		i = ++j;
+	}
+	free(tk);
+	return (s);
+}
+
+int	skip_quotes(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[0] != '\'' && str[0] != '\"')
+	{
+		while (str[i + 1] && str[i] != '\'' && str[i] != '\"')
+			i++;
+		if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+			i--;
+	}
+	else
+	{
+		while (str[++i] && str[i] != str[0])
+			continue ;
+	}
+	return (i);
+}

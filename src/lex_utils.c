@@ -114,6 +114,8 @@ void	iter_tokens(t_token **tokens, t_env *env)
 		if (is_redirection(token->content) && token->next)
 			token->next->type = TOKEN_FILE;
 		token->content = ft_expansion(token->content, 0, env);
+		if (token->type == TOKEN_ARG || token->type == TOKEN_LITERAL)
+        	token->content = remove_quotes(token->content, env);
 		if (ft_strlen(token->content) == 0)
 		{
 			if (token->prev)
