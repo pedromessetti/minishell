@@ -87,7 +87,7 @@ void	free_tokens(t_token **token_list)
 	{
 		tmp = (*token_list)->next;
 		// if ((*token_list)->content)
-		// 	free((*token_list)->content);
+		free((*token_list)->content);
 		free(*token_list);
 		*token_list = tmp;
 	}
