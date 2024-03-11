@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:07 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 18:20:59 by pmessett         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:01:26 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,11 @@ void				free_tokens(t_token **token_list);
 void				print_token_list(t_token *token_list);
 void				iter_tokens(t_token **tokens);
 void				add_token_to_tail(t_token **head, t_token *new_node);
-t_token*			duplicate_token(t_token *token);
-
-
+t_token				*duplicate_token(t_token *token);
 
 /* --- Parsing --- */
 
-void					parser(t_token *tokens, t_env **env);
+void				parser(t_token *tokens, t_env **env);
 
 /* --- Checkers --- */
 
@@ -128,6 +126,8 @@ void				exec_echo(char *arg, int fd, t_env **env);
 void				exec_identifier(t_token *token, t_cmd_tb **cmd_list,
 						t_env **env, t_token *redirs);
 void				exec_pwd(int fd);
+void				handler(t_cmd_tb **cmd_list, t_token *redirs, char *path,
+						char **args);
 
 /* --- Child Process --- */
 
@@ -155,8 +155,5 @@ void				unset_env(char *var, t_env **env);
 /* --- Signals --- */
 
 void				signal_handler(int sig);
-
-
-
 
 #endif
