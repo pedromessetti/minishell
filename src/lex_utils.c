@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:48:44 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 18:08:39 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/14 21:36:01 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int	is_literal_string(char *str, int len)
 {
 	if (len < 2)
 		return (0);
-	if ((str[0] == '"' || str[len - 1] == '"') || (str[0] == '\'' || str[len
-				- 1] == '\''))
+	if ((str[0] == '"' || str[len - 1] == '"') || (str[0] == '\'' \
+			|| str[len - 1] == '\''))
 		return (1);
 	return (0);
 }
@@ -52,66 +52,4 @@ int	is_redirection(char *str)
 	if (ft_strncmp(str, "<<", 2) == 0)
 		return (1);
 	return (0);
-}
-
-void	iter_tokens(t_token **tokens)
-{
-	t_token	*token;
-
-	token = *tokens;
-	while (token)
-	{
-		if ((!token->prev || token->prev->type == TOKEN_OPERATOR)
-			&& token->type == TOKEN_ARG)
-			token->type = TOKEN_IDENTIFIER;
-		if (token->prev && token->prev->type == TOKEN_IDENTIFIER
-			&& token->type == TOKEN_IDENTIFIER)
-		{
-			token->type = TOKEN_ARG;
-			while (token->next && token->next->type != TOKEN_OPERATOR)
-			{
-				token->next->type = TOKEN_ARG;
-				token = token->next;
-			}
-		}
-		if (ft_strncmp(token->content, "grep", 4) == 0)
-		{
-			while (token->next && token->next->type != TOKEN_OPERATOR)
-			{
-				token->next->type = TOKEN_ARG;
-				token = token->next;
-			}
-		}
-		if (ft_strncmp(token->content, "echo", 4) == 0)
-		{
-			while (token->next && token->next->type != TOKEN_OPERATOR)
-			{
-				token->next->type = TOKEN_ARG;
-				token = token->next;
-			}
-		}
-		if (ft_strncmp(token->content, "export", 6) == 0
-			|| ft_strncmp(token->content, "unset", 5) == 0)
-		{
-			while (token->next && token->next->type != TOKEN_OPERATOR)
-			{
-				token->next->type = TOKEN_ARG;
-				token = token->next;
-			}
-		}
-		if (ft_strncmp(token->content, "cd", 2) == 0)
-		{
-			while (token->next && token->next->type != TOKEN_OPERATOR)
-			{
-				token->next->type = TOKEN_ARG;
-				token = token->next;
-			}
-		}
-		if ((!token->prev || token->prev->type == TOKEN_OPERATOR)
-			&& token->type == TOKEN_LITERAL)
-			token->type = TOKEN_IDENTIFIER;
-		if (is_redirection(token->content) && token->next)
-			token->next->type = TOKEN_FILE;
-		token = token->next;
-	}
 }
