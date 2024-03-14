@@ -2,3 +2,4 @@ minishell
 .vscode
 src/*.o
 libft/libft.a
+*.txt
