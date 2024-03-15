@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:01 by pmessett          #+#    #+#             */
-/*   Updated: 2024/03/14 23:57:24 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:25:27 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,10 @@ char	**get_full_env(t_env **env)
 	tmp = *env;
 	i = 0;
 	if (!full_env)
+	{
+		set_exit_code(1, true);
 		return (NULL);
+	}
 	while (tmp)
 	{
 		full_env[i] = ft_strdup(tmp->content);

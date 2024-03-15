@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:39:11 by pmessett          #+#    #+#             */
-/*   Updated: 2024/03/15 00:02:24 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:19:42 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	parser(t_token *tokens, t_env **env)
 				&& tokens->next->type == TOKEN_ARG)
 			{
 				ft_printf("minishell: cd: too many arguments\n");
+				set_exit_code(1, true);
 				while (tokens && tokens->type == TOKEN_ARG)
 					tokens = tokens->next;
 				continue ;
