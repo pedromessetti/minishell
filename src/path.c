@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:49:17 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:49:18 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/14 22:10:46 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,15 @@ t_cmd_tb	*choose_handle(char *cmd, t_cmd_tb *cmd_tb, char **args,
 {
 	char	**possible_paths;
 	char	*tmp;
-
 	if (ft_isdir(cmd))
 	{
 		if (access(cmd, F_OK) == -1)
 			ft_printf("minishell: %s: No such file or directory\n", cmd);
+		tmp = ft_strdup(cmd);
+		cmd_tb = set_cmd_tb(cmd_tb, tmp, args);
+	}
+	else if (ft_strcmp(cmd, "unset") == 0 || ft_strcmp(cmd, "export") == 0)
+	{
 		tmp = ft_strdup(cmd);
 		cmd_tb = set_cmd_tb(cmd_tb, tmp, args);
 	}

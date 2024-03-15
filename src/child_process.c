@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 14:48:32 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 18:10:46 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/14 23:07:51 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 {
+	char	**tmp;
+
+	tmp = get_full_env(env);
 	if (cmd_list->cmd_path)
 	{
 		if (cmd_list->io.in != STDIN_FILENO)
@@ -26,7 +29,17 @@ void	exec_cmd(t_cmd_tb *cmd_list, t_env **env)
 			cmd_list->dup2_fd[1] = dup2(cmd_list->io.out, STDOUT_FILENO);
 			close(cmd_list->io.out);
 		}
-		execve(cmd_list->cmd_path, cmd_list->args, get_full_env(env));
+		if (ft_strcmp(cmd_list->cmd_path, "echo") == 0)
+			exec_echo(cmd_list->args[0], STDOUT_FILENO, env);
+		else if (ft_strcmp(cmd_list->cmd_path, "cd") == 0)
+			exec_cd(cmd_list->args[0], env);
+		else if (ft_strcmp(cmd_list->cmd_path, "pwd") == 0)
+			exec_pwd(STDOUT_FILENO);
+		else if (ft_strcmp(cmd_list->cmd_path, "env") == 0)
+			print_env(env, cmd_list->dup2_fd[1]);
+		else
+			execve(cmd_list->cmd_path, cmd_list->args, tmp);
+		free_matrix(tmp);
 		close(cmd_list->dup2_fd[0]);
 		close(cmd_list->dup2_fd[1]);
 	}
@@ -68,22 +81,29 @@ int	start_process(t_cmd_tb *cmd_tb, t_env **env)
 	curr = cmd_tb;
 	while (curr)
 	{
-		if (pipe(curr->pipe_fd) == -1)
+		if (curr->cmd_path && ft_strcmp(curr->cmd_path, "unset") == 0 && !curr->next && !curr->prev)
+			unset_env(curr->args[1], env); // TODO: Add suport to multiple args
+		else if (curr->cmd_path && ft_strcmp(curr->cmd_path, "export") == 0 && !curr->next && !curr->prev)
+			set_env(curr->args[1], env); // TODO: Add suport to multiple args
+		else
 		{
-			perror("Error creating pipe");
-			return (1);
+			if (pipe(curr->pipe_fd) == -1)
+			{
+				perror("Error creating pipe");
+				return (1);
+			}
+			curr->pid = fork();
+			if (curr->pid == 0)
+			{
+				bind_redirs(curr);
+				bind_stdin(curr);
+				bind_stdout(curr);
+				exec_cmd(curr, env);
+			}
+			if (curr != cmd_tb)
+				close(curr->prev->pipe_fd[0]);
+			close(curr->pipe_fd[1]);
 		}
-		curr->pid = fork();
-		if (curr->pid == 0)
-		{
-			bind_redirs(curr);
-			bind_stdin(curr);
-			bind_stdout(curr);
-			exec_cmd(curr, env);
-		}
-		if (curr != cmd_tb)
-			close(curr->prev->pipe_fd[0]);
-		close(curr->pipe_fd[1]);
 		curr = curr->next;
 	}
 	close_all_pipes(cmd_tb);
