@@ -1,0 +1,176 @@
+#!/bin/bash +x
+
+declare RED='\033[0;31m'
+declare GREEN='\033[0;32m'
+declare RESET='\033[0m'
+declare EXECUTABLE="./minishell"
+declare FAIL=0
+
+build_exec() {
+    make fclean
+    make
+    make clean
+}
+
+# Compare output from minishell with bash output
+test_command() {
+    local command="$1"
+    local bash_out="$2"
+    
+    local minishell_out=$(echo "$command" | $EXECUTABLE | sed '/minishell>/d' 2> /dev/null)
+
+    if [ "$minishell_out" == "$bash_out" ]; then
+        echo -e "$GREEN[OK]$RESET $command"
+    else
+        echo -e "$RED[KO]$RESET $command"
+        echo -e "Expected:\n$bash_out"
+        echo -e "Actual:\n$minishell_out"
+        ((FAIL++))
+    fi
+}
+
+build_exec > /dev/null || { echo -e "Unable to build minishell executable"; exit 1; }
+
+echo "SIMPLE"
+test_command "ls" "$(ls)"
+test_command "ls -la" "$(ls -la)"
+test_command "ls -laxc" "$(ls -laxc)"
+test_command "ls -l -a" "$(ls -l -a)"
+test_command "ls -l -a -x -c" "$(ls -l -a -x -c)"
+echo
+
+echo "SIMPLE PIPES"
+test_command "ls | cat" "$(ls | cat)"
+test_command "ls | cat -e" "$(ls | cat -e)"
+test_command "ls -l | cat -e" "$(ls -l | cat -e)"
+test_command "ls -l -a | cat -e" "$(ls -l -a | cat -e)"
+test_command "ls -l -a -x -c | cat -e" "$(ls -l -a -x -c | cat -e)"
+test_command "ls -l | grep 'minishell'" "$(ls -l | grep 'minishell')" 
+echo
+
+echo "MULTIPLE PIPES"
+test_command "ls | cat | cat -e" "$(ls | cat | cat -e)"
+test_command "ls -l | cat -e | cat" "$(ls -l | cat -e | cat)"
+test_command "ls -l -a | cat -e | cat -e" "$(ls -l -a | cat -e | cat -e)"
+test_command "ls -l -a -x -c | cat -e | cat -e | cat -e" "$(ls -l -a -x -c | cat -e | cat -e | cat -e)"
+test_command "ls -l | grep 'minishell' | wc -l" "$(ls -l | grep 'minishell' | wc -l)"
+test_command "find . -name '*.c' | xargs grep 'main' | wc -l" "$(find . -name '*.c' | xargs grep 'main' | wc -l)"
+test_command "ps aux | grep 'root' | wc -l" "$(ps aux | grep 'root' | wc -l)"
+test_command "echo 'Hello, World!' | tee output.txt | wc -c" "$(echo 'Hello, World!' | tee output.txt | wc -c)"
+echo
+
+# Test multiple pipes with redirections
+test_command "cat < Makefile | sort | uniq > sorted.txt" "$(cat < Makefile | sort | uniq > sorted.txt)"
+# Need to fix:
+# cat: '<': No such file or directory
+# uniq: '>': No such file or directory
+echo
+
+echo "ECHO"
+test_command "echo Hello, world!" "$(echo Hello, world!)"
+test_command "echo 'Hello, world!'" "$(echo 'Hello, world!')"
+test_command 'echo "Hello, world!"' "$(echo "Hello, world!")"
+test_command "echo " "$(echo )"
+test_command "echo ''" "$(echo '')"
+test_command 'echo ""' "$(echo "")"
+test_command "echo ls" "$(echo ls)"
+echo
+
+echo "ECHO WITH PIPES"
+test_command "echo | ls -la" "$(echo | ls -la)"
+test_command "echo | ls -la | echo " "$(echo | ls -la | echo )"
+test_command "ls -la | echo " "$(ls -la | echo )"
+test_command "echo abc | ls -la" "$(echo abc | ls -la)"
+test_command "echo abc | ls -la | echo abc " "$(echo abc | ls -la | echo abc )"
+test_command "ls -la | echo abc " "$(ls -la | echo abc )"
+test_command "echo Hello, world! | ls" "$(echo Hello, world! | ls)"
+test_command "echo Hello, world! | ls -l -a" "$(echo Hello, world! | ls -l -a)"
+test_command "echo Hello, world! | ls -la" "$(echo Hello, world! | ls -la)"
+test_command "echo 'Hello, World!' | wc -c" "$(echo 'Hello, World!' | wc -c)"
+test_command 'echo ls | ls' "$(echo ls | ls)"
+test_command 'echo ls | cat -e' "$(echo ls | cat -e)"
+test_command 'echo abc | grep abc' "$(echo abc | grep abc)"
+test_command 'echo abc | grep def' "$(echo abc | grep def)"
+test_command 'ls | echo' "$(ls | echo)"
+echo
+
+echo "ENV"
+# test_command "env" "$(env)" # In order to this test to pass need to ignore the last env var "_" because it always diverg
+test_command "env ls" "$(env ls)"
+test_command "env echo" "$(env echo)"
+test_command "env pwd" "$(env pwd)"
+# test_command "env exit" "$(env exit)"
+# test_command "env ls -la env" "$(env ls -la env)"
+echo
+
+echo "EXPORT"
+test_command "export VAR=value" "$(export VAR=value)"
+test_command "env | grep VAR" "$(env | grep VAR)"
+# test_command "export VAR1=value1 VAR2=value2 VAR3=value3" "$(export VAR1=value1 VAR2=value2 VAR3=value3)"
+test_command "export VAR" "$(export VAR)"
+# test_command "export VAR1 VAR2 VAR3" "$(export VAR1 VAR2 VAR3)"
+test_command "export VAR=value | grep VAR" "$(export VAR=value | grep VAR)"
+test_command "env | grep VAR" "$(env | grep VAR)"
+echo
+
+echo "UNSET"
+test_command "unset VAR=value" "$(unset VAR=value)"
+test_command "unset VAR" "$(unset VAR)"
+test_command "env | grep VAR" "$(env | grep VAR)"
+test_command "export VAR=value | unset VAR | grep VAR" "$(export VAR=value | unset VAR | grep VAR)"
+test_command "env | grep VAR" "$(env | grep VAR)"
+# test_command "unset VAR1 VAR2 VAR3" "$(unset VAR1 VAR2 VAR3)"
+echo
+
+# Test export command with pipes
+# test_command "export VAR1=value1 VAR2=value2 | grep VAR" "$(export VAR1=value1 VAR2=value2 | grep VAR)"
+# test_command "export VAR1=value1 VAR2=value2 | grep VAR1" "$(export VAR1=value1 VAR2=value2 | grep VAR1)"
+# test_command "export VAR1=value1 VAR2=value2 | grep VAR2" "$(export VAR1=value1 VAR2=value2 | grep VAR2)"
+# test_command "export VAR1=value1 VAR2=value2 | grep VAR3" "$(export VAR1=value1 VAR2=value2 | grep VAR3)"
+
+
+echo "ENV WITH PIPES"
+test_command "env | a" "$(env | a)"
+test_command "env | grep MAKE" "$(env | grep MAKE)"
+test_command "env | grep -i make" "$(env | grep -i make)"
+test_command "env | ls" "$(env | ls)"
+# test_command "env | cd" "$(env | cd)"
+echo
+
+echo "PWD"
+test_command "pwd" "$(pwd)"
+# test_command "pwd ls" "$(pwd ls)"
+# test_command "echo $PWD"
+echo
+
+test_command "pwd" "$(pwd)"
+
+
+# TODO: redir stderr and compare
+echo "ERRORS"
+test_command "ls -l -w" "$(ls -l -w)"
+test_command "cat < test | sort | uniq > sorted.txt" "$(cat < test | sort | uniq > sorted.txt)"
+test_command 'echo ls | cat -x' "$(echo ls | cat -x)"
+test_command 'echo | grep' "$(echo | grep)"
+test_command "env cd" "$(env cd)"
+test_command "env -s" "$(env -s)"
+test_command "env -sa" "$(env -sa)"
+test_command "env -s -a" "$(env -s -a)"
+
+
+# NOT WORKING
+# env   | grep VAR
+# env a
+# .
+# ,
+# .
+# /
+# ;
+# '
+# "
+
+if [ $FAIL != 0 ]; then
+    echo -e "$RED=-=-=-=-=-=- $FAIL TESTS FAIL =-=-=-=-=-=-$RESET"
+else
+    echo -e "$GREEN=-=-=-=-=-=- SUCESS =-=-=-=-=-=-$RESET"
+fi
