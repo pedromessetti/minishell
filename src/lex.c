@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:48:55 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/12 13:48:56 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/14 23:38:26 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@ static int	ident_type(char *str, int len)
 {
 	if (ft_strchr("|<>", str[0]))
 		return (TOKEN_OPERATOR);
-	if (is_keyword(str, len))
-		return (TOKEN_KEYWORD);
-	if ((ft_isalnum(str[0]) || ft_isdir(str)))
+	if (ft_isalnum(str[0]) || ft_isdir(str) || is_keyword(str, len))
 		return (TOKEN_IDENTIFIER);
 	if (str[0] == '$')
-		return (TOKEN_ENV_VARIABLE);
+		return (TOKEN_VARIABLE);
 	if (str[0] == '-')
 		return (TOKEN_ARG);
 	return (-1);
