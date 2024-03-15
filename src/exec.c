@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:49:33 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/14 11:41:42 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/14 23:59:16 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	exec_cd(const char *directory, t_env **env)
 	if (ft_strncmp(directory, "~/", 2) == 0 || ft_strcmp(directory, "~") == 0
 		|| !*directory)
 	{
-		chdir(ft_getenv("HOME", env));
+		if (chdir(ft_getenv("HOME", env))!=0)
+			perror("minishell: cd");
 	}
 	else
 	{
@@ -25,9 +26,12 @@ void	exec_cd(const char *directory, t_env **env)
 			perror("minishell: cd");
 	}
 	char *cdir = getcwd(NULL,0);
+	char *old_tmp = ft_strjoin("OLDPWD=", ft_getenv("PWD", env));
+	set_env(old_tmp, env);
 	char *tmp = ft_strjoin("PWD=", cdir);
 	set_env(tmp, env);
 	free(tmp);
+	free(old_tmp);
 	free(cdir);
 }
 
@@ -105,12 +109,4 @@ void	exec_identifier(t_token *token, t_cmd_tb **cmd_list, t_env **env,
 	}
 	tmp = find_cmd_tb_tail(*cmd_list);
 	tmp->redirs = redirs;
-	// cmd_io = &tmp->io;
-	// *cmd_io = *io;
-	// io->in = -1;
-	// io->out = -1;
-	// if (cmd_io->in == -1)
-	// 	cmd_io->in = STDIN_FILENO;
-	// if (cmd_io->out == -1)
-	// 	cmd_io->out = STDOUT_FILENO;
 }
