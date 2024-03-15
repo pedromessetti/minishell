@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:49:33 by pmessett          #+#    #+#             */
-/*   Updated: 2024/03/15 00:24:39 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:51:14 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,14 @@ void	exec_pwd(int fd)
 
 void	exec_echo(char *arg, int fd, t_env **env)
 {
-	(void)env;
-	if (arg)
+	if (arg && arg[0] == '$')
+	{
+		if (ft_getenv(arg, env))
+			ft_putendl_fd(ft_getenv(arg, env), fd);
+		else
+			ft_putendl_fd("", fd);
+	}
+	else if (arg)
 		ft_putendl_fd(arg, fd);
 	else if (!arg)
 		ft_putendl_fd("", fd);

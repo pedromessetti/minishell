@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:07 by pmessett          #+#    #+#             */
-/*   Updated: 2024/03/15 00:26:53 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:39:17 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int					is_redirection(char *str);
 t_token				*set_token(t_token *tokens, int type, char *str, int len);
 void				free_tokens(t_token **token_list);
 void				print_token_list(t_token *token_list);
-void				iter_tokens(t_token **tokens, t_env *env);
+void				iter_tokens(t_token **tokens);
 void				add_token_to_tail(t_token **head, t_token *new_node);
 t_token				*duplicate_token(t_token *token);
 
@@ -171,9 +171,6 @@ char				*ft_expansion(char *str, char c, t_env *env);
 char				*free_joined(char *s1, char *s2);
 char				*remove_quotes(char *tk, t_env *env);
 int					skip_quotes(char *str);
-
-/* Exit Status*/
-int					ft_isdigit(int c);
 
 /* --- Utils --- */
 

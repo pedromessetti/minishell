@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aangelic <aangelic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 16:51:01 by aangelic          #+#    #+#             */
-/*   Updated: 2023/10/10 19:02:50 by aangelic         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:49:48 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_isdigit(int c)
-{
-	if (c >= 48 && c <= 57)
-		return (c);
-	return (0);
-}
 
 char	*expand_dollar(char *str, int *i, t_env *env)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aangelic <aangelic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 17:12:55 by aangelic          #+#    #+#             */
-/*   Updated: 2023/10/10 19:01:21 by aangelic         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:39:08 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*separate_var(char *str)
 	{
 		if (str[i] == '$' || str[i] == '*' || str[i] == 32 || str[i] == ':'
 			|| str[i] == '\'' || str[i] == '\"' || str[i] == '/'
-			|| str[i] == '.' || str[i] == ',' || (str[i] == '?' && i == 1) || ft_isdigit(str[i - 1]))
+			|| str[i] == '.' || str[i] == ',' || (str[i] == '?' && i == 1) || ft_isnum(str[i - 1]))
 			break ;
 	}
 	if (i == 1 && str[i - 1] == '$' && str[i] != '?')
