@@ -6,7 +6,7 @@
 /*   By: pmessett <pmessett>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 13:50:07 by pmessett          #+#    #+#             */
-/*   Updated: 2023/09/14 20:01:26 by pmessett         ###   ########.fr       */
+/*   Updated: 2024/03/15 00:06:10 by pmessett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-/* --- Tokens --- */
+/* --- MACROS --- */
 
 # define TOKEN_IDENTIFIER 0
 # define TOKEN_OPERATOR 1
 # define TOKEN_LITERAL 2
-# define TOKEN_ENV_VARIABLE 3
+# define TOKEN_VARIABLE 3
 # define TOKEN_ARG 4
 # define TOKEN_KEYWORD 5
 # define TOKEN_FILE 6
@@ -126,8 +126,6 @@ void				exec_echo(char *arg, int fd, t_env **env);
 void				exec_identifier(t_token *token, t_cmd_tb **cmd_list,
 						t_env **env, t_token *redirs);
 void				exec_pwd(int fd);
-void				handler(t_cmd_tb **cmd_list, t_token *redirs, char *path,
-						char **args);
 
 /* --- Child Process --- */
 
@@ -155,5 +153,9 @@ void				unset_env(char *var, t_env **env);
 /* --- Signals --- */
 
 void				signal_handler(int sig);
+
+/* --- Utils --- */
+
+int					is_valid_identifier(char *str);
 
 #endif
